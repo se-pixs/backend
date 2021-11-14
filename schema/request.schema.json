@@ -1,0 +1,45 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://example.com/schema/request.schema.json",
+    "title": "Request",
+    "description": "Request to perform an action",
+    "type": "object",
+    "properties": {
+        "sessionID": {
+            "description": "Session ID",
+            "type": "integer"
+        },
+        "action": {
+            "description": "Action to perform",
+            "type": "string"
+        },
+        "sliderInputs": {
+            "type":"array",
+            "items": {
+                "sliderInput": {
+                    "description": "A slider input",
+                    "$ref": "#/inputs/slider.schema.json"    
+                }
+            }
+        },
+        "valuefieldInputs": {
+            "type":"array",
+            "items": {
+                "valuefieldInput": {
+                    "description": "A valuefield input",
+                    "$ref": "#/inputs/valuefield.schema.json"    
+                }
+            }
+        },
+        "colorPickers": {
+            "type": "array",
+            "items": {
+                "colorPicker": {
+                    "description": "A color picker",
+                    "$ref": "#/inputs/colorpicker.schema.json"    
+                }
+            } 
+        },
+        "uniqueItems" : true
+    }
+}
