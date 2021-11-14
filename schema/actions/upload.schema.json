@@ -13,6 +13,10 @@
             "description": "Format of the image",
             "type": "string",
             "enum": ["JPEG", "PNG"]
+        },
+        "source": {
+            "description": "Source of the image",
+            "type": "string"
         }
     }
 }
