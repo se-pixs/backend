@@ -1,0 +1,26 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://example.com/inputs/valuefield.schema.json",
+    "title": "Valuefield",
+    "description:": "Valuefield input",
+    "type": "object",
+    "properties": {
+        "valueFieldName": {
+            "description": "The name of the valuefield",
+            "type": "string"
+        },
+        "valueFieldDescription": {
+            "description": "The description of the valuefield",
+            "type": "string"
+        },
+        "valuefieldInput": {
+            "description": "The input of the valuefield",
+            "type": "number"
+        }
+    },
+    "required": [
+        "valueFieldName",
+        "valueFieldDescription",
+        "valuefieldInput"
+    ]
+}

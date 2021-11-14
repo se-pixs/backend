@@ -1,0 +1,28 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://example.com/inputs/slider.schema.json",
+    "title": "Slider",
+    "description:": "Slider inputs",
+    "type": "object",
+    "properties": {
+        "sliderName": {
+            "description": "The name of the slider",
+            "type": "string"
+        },
+        "sliderDescription": {
+            "description": "The description of the slider",
+            "type": "string"
+        },
+        "sliderValue": {
+            "description": "The value of the slider",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+        }
+    },
+    "required": [
+        "sliderName",
+        "sliderDescription",
+        "sliderValue"
+    ]
+}

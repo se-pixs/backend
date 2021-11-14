@@ -1,0 +1,55 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://example.com/schema/actions.schema.json",
+    "title": "Actions",
+    "description": "Actions that can be performed",
+    "type": "object",
+    "properties": {
+        "actions": {
+            "description" : "An action that can be performed",
+            "type": "array",
+            "items": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the action"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "A description of the action"
+                },
+                "helpMessage": {
+                    "type": "string",
+                    "description": "A help message explaining the action"
+                },
+                "sliderInputs": {
+                    "type":"array",
+                    "items": {
+                        "sliderInput": {
+                            "description": "A slider input",
+                            "$ref": "#/inputs/slider.schema.json"    
+                        }
+                    }
+                },
+                "valuefieldInputs": {
+                    "type":"array",
+                    "items": {
+                        "valuefieldInput": {
+                            "description": "A valuefield input",
+                            "$ref": "#/inputs/valuefield.schema.json"    
+                        }
+                    }
+                },
+                "colorPickers": {
+                    "type": "array",
+                    "items": {
+                        "colorPicker": {
+                            "description": "A color picker",
+                            "$ref": "#/inputs/colorpicker.schema.json"    
+                        }
+                    } 
+                },
+                "uniqueItems" : true
+            }
+        }
+    }
+}

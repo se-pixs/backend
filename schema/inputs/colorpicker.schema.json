@@ -1,0 +1,47 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://example.com/inputs/colorpicker.schema.json",
+    "title": "ColorPicker",
+    "description:": "Colorpicker input",
+    "type": "object",
+    "properties": {
+        "colorPickerName": {
+            "description": "The name of the colorpicker",
+            "type": "string"
+        },
+        "colorPickerDescription": {
+            "description": "The description of the colorpicker",
+            "type": "string"
+        },
+        "colorPickerInput": {
+            "description": "The input of the colorpicker",
+            "type": "object",
+            "properties": {
+                "red": {
+                    "description": "The red value of the colorpicker",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 255
+                },
+                "green": {
+                    "description": "The green value of the colorpicker",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 255
+                },
+                "blue": {
+                    "description": "The blue value of the colorpicker",
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 255
+                }
+            },
+            "required": ["red", "green", "blue"]
+        }
+    },
+    "required": [
+        "colorPickerName",
+        "colorPickerDescription",
+        "colorPickerInput"
+    ]
+}
