@@ -55,5 +55,6 @@
                 "uniqueItems" : true
             }
         }
-    }
+    },
+    "required": ["sessionID", "actions"]
 }

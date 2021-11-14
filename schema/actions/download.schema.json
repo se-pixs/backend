@@ -14,5 +14,6 @@
             "type": "string",
             "enum": ["JPEG", "PNG"]
         }
-    }
+    },
+    "required": ["sessionID", "format"]
 }

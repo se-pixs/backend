@@ -11,35 +11,60 @@
         },
         "action": {
             "description": "Action to perform",
-            "type": "string"
-        },
-        "sliderInputs": {
-            "type":"array",
-            "items": {
-                "sliderInput": {
-                    "description": "A slider input",
-                    "$ref": "#/inputs/slider.schema.json"    
+            "type": "object",
+            "properties": {
+                "actionName": {
+                    "description": "Action name",
+                    "type": "string"
+                },
+                "actionParams": {
+                    "description": "Action parameters",
+                    "type": "object",
+                    "properties": {
+                        "sliderInputs": {
+                            "type": "array",
+                            "items": {
+                                "sliderInput": {
+                                    "description": "A slider input",
+                                    "$ref": "#/inputs/slider.schema.json"
+                                }
+                            }
+                        },
+                        "valuefieldInputs": {
+                            "type": "array",
+                            "items": {
+                                "valuefieldInput": {
+                                    "description": "A valuefield input",
+                                    "$ref": "#/inputs/valuefield.schema.json"
+                                }
+                            }
+                        },
+                        "colorPickers": {
+                            "type": "array",
+                            "items": {
+                                "colorPicker": {
+                                    "description": "A color picker",
+                                    "$ref": "#/inputs/colorpicker.schema.json"
+                                }
+                            }
+                        },
+                        "uniqueItems": true
+                    },
+                    "required": [
+                        "sliderInputs",
+                        "valuefieldInputs",
+                        "colorPickers"
+                    ]
                 }
-            }
-        },
-        "valuefieldInputs": {
-            "type":"array",
-            "items": {
-                "valuefieldInput": {
-                    "description": "A valuefield input",
-                    "$ref": "#/inputs/valuefield.schema.json"    
-                }
-            }
-        },
-        "colorPickers": {
-            "type": "array",
-            "items": {
-                "colorPicker": {
-                    "description": "A color picker",
-                    "$ref": "#/inputs/colorpicker.schema.json"    
-                }
-            } 
-        },
-        "uniqueItems" : true
-    }
+            },
+            "required": [
+                "actionName",
+                "actionParams"
+            ]
+        }
+    },
+    "required": [
+        "sessionID",
+        "action"
+    ]
 }

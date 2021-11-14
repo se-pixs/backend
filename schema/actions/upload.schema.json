@@ -18,5 +18,6 @@
             "description": "Source of the image",
             "type": "string"
         }
-    }
+    },
+    "required": ["sessionID", "format", "source"]
 }
