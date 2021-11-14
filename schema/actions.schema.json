@@ -5,6 +5,10 @@
     "description": "Actions that can be performed",
     "type": "object",
     "properties": {
+        "sessionID": {
+            "description": "Session ID",
+            "type": "integer"
+        },
         "actions": {
             "description" : "An action that can be performed",
             "type": "array",

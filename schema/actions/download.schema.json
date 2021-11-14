@@ -1,0 +1,18 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://example.com/schema/actions/download.schema.json",
+    "title": "Download",
+    "description": "Action to download the image",
+    "type": "object",
+    "properties": {
+        "sessionID": {
+            "description": "Session ID",
+            "type": "integer"
+        },
+        "format": {
+            "description": "Format of the image",
+            "type": "string",
+            "enum": ["JPEG", "PNG"]
+        }
+    }
+}
