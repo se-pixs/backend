@@ -1,0 +1,38 @@
+{
+  "title": "Actions Dev",
+  "description": "Actions that can be performed on dev instance",
+  "actions": [
+    {
+      "name": "upload",
+      "description": "Upload a file",
+      "helpMessage": "",
+      "path": "/upload",
+      "format": {
+        "type": "string",
+        "enum": [
+          "JPEG",
+          "PNG"
+        ]
+      },
+      "source": {
+        "type": "string"
+      }
+    },
+    {
+      "name": "download",
+      "description": "Download a file",
+      "helpMessage": "",
+      "path": "/download",
+      "format": {
+        "type": "string",
+        "enum": [
+          "JPEG",
+          "PNG"
+        ]
+      }
+    }
+  ],
+  "customActions": [
+    "changeFormat"
+  ]
+}
