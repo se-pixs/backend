@@ -140,6 +140,7 @@ def replace_valuefield_input(custom_input):
 def replace_colorpicker_input(custom_input):
     input_json = {}
 
+    # insert static parameters TODO : make this dynamic
     input_json.update({'name': custom_input['name']})
     input_json.update({'description': custom_input['description']})
 
@@ -154,6 +155,7 @@ def replace_colorpicker_input(custom_input):
 def replace_slider_input(custom_input):
     input_json = {}
 
+    # insert static parameters TODO : make this dynamic
     input_json.update({'name': custom_input['name']})
     input_json.update({'description': custom_input['description']})
     input_json.update({'value': 1})
