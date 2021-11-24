@@ -39,5 +39,5 @@ def handle_uploaded_file(f, format, session_id):
                 destination.write(chunk)
         return True
     else:
-        logging.ERROR('Format not supported')
+        logging.error('Format not supported')
         return None
