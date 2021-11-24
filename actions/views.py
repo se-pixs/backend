@@ -35,6 +35,7 @@ def index(request):
         request.session.set_expiry(server.SESSION_EXPIRATION_TIME)
         return HttpResponse(json.dumps(action_json), content_type='application/json')
 
+
 # TODO : export to json methods to separate file
 
 
@@ -78,8 +79,13 @@ def insert_custom_action(custom_action_name, actions_json):
         custom_action.close()
         return custom_action_json
 
-    except (IOError, json.decoder.JSONDecodeError):  # TODO error message
+    except IOError:
         logging.error('Could not open custom actions file with path: ' + custom_action_path)
+        # clean up
+        custom_action.close()
+        return None
+    except json.decoder.JSONDecodeError:
+        logging.error('Could not decode custom actions file with path: ' + custom_action_path)
         # clean up
         custom_action.close()
         return None
@@ -125,16 +131,34 @@ def insert_inputs(custom_action_json):
 
 
 def replace_valuefield_input(custom_input):
-    input_json = {}
+    try:
+        default_valuefield = open(join(server.INPUTS_PATH, 'valuefield.json'))
+        default_valuefield_json = json.loads(default_valuefield.read())
+    except IOError:
+        logging.error('Could not open valuefield.json')
+        return None
 
     # insert static parameters TODO : make this dynamic
-    input_json.update({'name': custom_input['name']})
-    input_json.update({'description': custom_input['description']})
-    input_json.update({'type': custom_input['type']})
-    input_json.update({'range': custom_input['range']})
-    input_json.update({'default': custom_input['default']})
+    default_valuefield_json.update({'name': custom_input['name']})
+    default_valuefield_json.update({'description': custom_input['description']})
 
-    return input_json
+    # build value json
+    value_json = {}
+    if custom_input['value']['type'] in default_valuefield_json['value']['type']:
+        value_json.update({'type': custom_input['value']['type']})
+        value_json.update({'range': custom_input['value']['range']})
+        value_json.update({'default': custom_input['value']['range'][custom_input['value']['default']]})
+    else:
+        logging.error('Value type not supported: ' + custom_input['value']['type'])
+        return None
+
+    # insert value json
+    default_valuefield_json.update({'value': value_json})
+
+    # clean up
+    default_valuefield.close()
+
+    return default_valuefield_json
 
 
 def replace_colorpicker_input(custom_input):
@@ -144,26 +168,35 @@ def replace_colorpicker_input(custom_input):
     input_json.update({'name': custom_input['name']})
     input_json.update({'description': custom_input['description']})
 
-    rgb = hex_to_rgb(custom_input['input']['default'])
-    input_json.update({'input': {'red': { "minimum": 0, "maximum": 255, "default": rgb[0]},
-                                 'green': { "minimum": 0, "maximum": 255, "default": rgb[1]} ,
-                                 'blue': { "minimum": 0, "maximum": 255, "default": rgb[2] }}})
+    rgb = hex_to_rgb(custom_input['default'])
+    input_json.update({'input': {'red': {"minimum": 0, "maximum": 255, "default": rgb[0]},
+                                 'green': {"minimum": 0, "maximum": 255, "default": rgb[1]},
+                                 'blue': {"minimum": 0, "maximum": 255, "default": rgb[2]}}})
 
     return input_json
 
 
 def replace_slider_input(custom_input):
-    input_json = {}
+    try:
+        default_slider = open(join(server.INPUTS_PATH, 'slider.json'))
+        default_slider_json = json.loads(default_slider.read())
+    except IOError:
+        logging.error('Could not open slider.json')
+        return None
 
     # insert static parameters TODO : make this dynamic
-    input_json.update({'name': custom_input['name']})
-    input_json.update({'description': custom_input['description']})
-    input_json.update({'value': 1})
-    input_json.update({'minimum': custom_input['minimum']})
-    input_json.update({'maximum': custom_input['maximum']})
-    input_json.update({'default': custom_input['default']})
+    default_slider_json.update({'name': custom_input['name']})
+    default_slider_json.update({'description': custom_input['description']})
 
-    return input_json
+    value_json = {}
+    value_json.update({'min': custom_input['value']['min']})
+    value_json.update({'max': custom_input['value']['max']})
+    value_json.update({'step': custom_input['value']['step']})
+    value_json.update({'default': custom_input['value']['default']})
+
+    default_slider_json.update({'value': value_json})
+
+    return default_slider_json
 
 
 def hex_to_rgb(hex):

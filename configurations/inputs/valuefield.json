@@ -1,14 +1,14 @@
 {
   "name": "valuefield",
   "description": "Value Field",
-  "type": {
-    "enum": [
+  "value": {
+    "type":[
       "integer",
       "float",
       "string",
       "dropdown"
     ],
     "range": [],
-    "default": ""
+    "default": 0
   }
 }
