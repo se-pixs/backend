@@ -34,7 +34,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 # custom variables
-SESSION_EXPIRATION_TIME = 20 * 60
+SESSION_EXPIRATION_TIME = 10 * 60
 ACTIONS_PATH = path.join('configurations', 'actions-dev.json')
 CUSTOM_ACTIONS_PATH = path.join('configurations', 'actions-dev')
 INPUTS_PATH = path.join('configurations', 'inputs')

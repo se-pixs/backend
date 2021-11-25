@@ -12,6 +12,7 @@ from zipfile import ZipFile
 
 def download(request):
     if 'session_id' in request.session:
+        request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
         session_id = request.session['session_id']
         if request.method == 'GET':
             image_path = os.path.join(settings.IMAGES_ROOT, session_id)

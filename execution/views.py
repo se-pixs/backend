@@ -10,11 +10,16 @@ import json
 
 
 def index(request):
-    return HttpResponse("No action selected")
+    if 'session_id' in request.session:
+        request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
+        return HttpResponse("No action selected")
+    else:
+        return HttpResponse("Session not valid")
 
 
 def change_format(request):
     if 'session_id' in request.session:
+        request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
         session_id = request.session['session_id']
         if request.method == 'POST':
             form = ChangeFormatForm(request.POST, request.FILES)

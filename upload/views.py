@@ -11,6 +11,7 @@ import json
 
 def index(request):
     if 'session_id' in request.session:
+        request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
         session_id = request.session['session_id']
         if request.method == 'POST':
             form = UploadFileForm(request.POST, request.FILES)
