@@ -3,6 +3,7 @@ import sys
 import os
 from os.path import normpath, join
 from django.http import HttpResponse, HttpResponseServerError
+from django.conf import settings
 
 # add modules to path
 sys.path.append(normpath(join(os.getcwd(), 'configurations')))
@@ -10,8 +11,8 @@ sys.path.append(normpath(join(os.getcwd(), 'configurations')))
 # custom imports
 import uuid
 import logging
-import server
 import json
+from xml.dom import minidom
 
 
 # Create your views here.
@@ -32,7 +33,7 @@ def index(request):
         # Error while assembling actions; see server logs for more info
         return HttpResponseServerError("An error occurred while providing the possible actions")
     else:
-        request.session.set_expiry(server.SESSION_EXPIRATION_TIME)
+        request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
         return HttpResponse(json.dumps(action_json), content_type='application/json')
 
 
@@ -40,14 +41,13 @@ def index(request):
 
 
 def assemble_actions():
-    wd = os.getcwd()
     try:
-        actions = open(normpath(join(wd, server.ACTIONS_PATH)))
+        actions = open(settings.ACTIONS_PATH)
         actions_json = json.loads(actions.read())
 
         # insert all custom actions into actions
         for action in actions_json['customActions']:
-            actions_json['actions'].append(insert_custom_action(action, actions_json))
+            actions_json['actions'].append(insert_custom_action(action))
 
         # remove custom actions
         if 'customActions' in actions_json:
@@ -55,25 +55,49 @@ def assemble_actions():
 
         # clean up
         actions.close()
+
+        actions_json = replace_icons(actions_json)
+
         return actions_json
     except IOError:
         # clean up
         actions.close()
-        logging.error('Could not open actions file with path: ' + server.ACTIONS_PATH)
+        logging.error('Could not open actions file with path: ' + settings.ACTIONS_PATH)
         return None
 
 
-def insert_custom_action(custom_action_name, actions_json):
+def replace_icons(actions_json):
+    for action in actions_json['actions']:
+        if 'icon' in action:
+            if action['icon'] != "":
+                try:
+                    # replace icon with corresponding svg tag
+                    icon_path = join(settings.ICONS_PATH, action['icon'])
+                    icon_svg = open(icon_path)
+                    doc = minidom.parse(icon_svg)
+                    svg_string = doc.getElementsByTagName('svg')[0].toxml()
+                    action.update({'icon': svg_string})
+                except IOError:
+                    logging.error('Could not open icon file with path: ' + icon_path)
+                    # clean up
+                    icon_svg.close()
+
+                # clean up
+                icon_svg.close()
+
+    return actions_json
+
+
+def insert_custom_action(custom_action_name):
     # check if custom action exists
-    wd = os.getcwd()
     try:
-        custom_action_path = normpath(join(wd, server.CUSTOM_ACTIONS_PATH, custom_action_name + '.json'))
+        custom_action_path = join(settings.CUSTOM_ACTIONS_PATH, custom_action_name + '.json')
         custom_action = open(custom_action_path)
 
         custom_action_json = json.loads(custom_action.read())
 
-        # replace paramters in custom action with input json
-        custom_action_json = insert_inputs(custom_action_json)
+        # replace parameters in custom action with input json
+        custom_action_json.update(insert_inputs(custom_action_json))
 
         # clean up
         custom_action.close()
@@ -92,20 +116,18 @@ def insert_custom_action(custom_action_name, actions_json):
 
 
 def insert_inputs(custom_action_json):
-    wd = os.getcwd()
-
     # create result json
-    result_json = {}
-    # insert static parameters TODO : make this dynamic
-    result_json.update({'name': custom_action_json['name']})
-    result_json.update({'description': custom_action_json['description']})
-    result_json.update({'helpMessage': custom_action_json['helpMessage']})
-    result_json.update({'path': custom_action_json['path']})
-    result_json.update({'parameters': {}})
+    result_json = {'parameters': {}}
 
-    # get possible inputs for validation
-    possible_inputs = open(normpath(join(wd, server.POSSIBLE_INPUTS_PATH)))
-    possible_inputs_json = json.loads(possible_inputs.read())
+    try:
+        # get possible inputs for validation
+        possible_inputs = open(settings.POSSIBLE_INPUTS_PATH)
+        possible_inputs_json = json.loads(possible_inputs.read())
+    except IOError:
+        logging.error('Could not open possible inputs file with path: ' + settings.POSSIBLE_INPUTS_PATH)
+        # clean up
+        possible_inputs.close()
+        return None
 
     # add all defined inputs to result json
     for input in possible_inputs_json['inputs']:
@@ -132,10 +154,12 @@ def insert_inputs(custom_action_json):
 
 def replace_valuefield_input(custom_input):
     try:
-        default_valuefield = open(join(server.INPUTS_PATH, 'valuefield.json'))
+        default_valuefield = open(join(settings.INPUTS_PATH, 'valuefield.json'))
         default_valuefield_json = json.loads(default_valuefield.read())
     except IOError:
         logging.error('Could not open valuefield.json')
+        # clean up
+        default_valuefield.close()
         return None
 
     # insert static parameters TODO : make this dynamic
@@ -150,6 +174,8 @@ def replace_valuefield_input(custom_input):
         value_json.update({'default': custom_input['value']['range'][custom_input['value']['default']]})
     else:
         logging.error('Value type not supported: ' + custom_input['value']['type'])
+        # clean up
+        default_valuefield.close()
         return None
 
     # insert value json
@@ -178,10 +204,12 @@ def replace_colorpicker_input(custom_input):
 
 def replace_slider_input(custom_input):
     try:
-        default_slider = open(join(server.INPUTS_PATH, 'slider.json'))
+        default_slider = open(join(settings.INPUTS_PATH, 'slider.json'))
         default_slider_json = json.loads(default_slider.read())
     except IOError:
         logging.error('Could not open slider.json')
+        # clean up
+        default_slider.close()
         return None
 
     # insert static parameters TODO : make this dynamic
@@ -195,6 +223,9 @@ def replace_slider_input(custom_input):
     value_json.update({'default': custom_input['value']['default']})
 
     default_slider_json.update({'value': value_json})
+
+    # clean up
+    default_slider.close()
 
     return default_slider_json
 

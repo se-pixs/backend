@@ -6,6 +6,7 @@
       "name": "upload",
       "description": "Upload a file",
       "helpMessage": "",
+      "icon": "",
       "path": "/upload",
       "format": {
         "type": "string",
@@ -22,6 +23,7 @@
       "name": "download",
       "description": "Download a file",
       "helpMessage": "",
+      "icon": "",
       "path": "/download",
       "format": {
         "type": "string",

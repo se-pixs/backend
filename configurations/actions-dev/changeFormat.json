@@ -2,6 +2,7 @@
   "name": "change Format",
   "description": "changes the format of the image to the provided format",
   "helpMessage": "",
+  "icon": "testIcon.svg",
   "path": "execute/changeFormat",
   "parameters": {
     "valuefields": [

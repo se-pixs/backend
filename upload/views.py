@@ -6,6 +6,7 @@ from .forms import UploadFileForm
 from django.conf import settings
 
 import os
+import json
 
 
 def index(request):
@@ -33,11 +34,19 @@ def handle_uploaded_file(f, format, session_id):
     if not os.path.exists(os.path.join(settings.IMAGES_ROOT, session_id)):
         os.makedirs(os.path.join(settings.IMAGES_ROOT, session_id))
 
-    if format.lower() == 'png' or format.lower() == 'jpeg':  # TODO make this more generic
+    # open upload config
+    try:
+        upload = open(settings.ACTIONS_PATH)
+        upload_json = json.loads(upload.read())
+    except IOError:
+        logging.error("Could not open upload config")
+        return False
+
+    if format.upper() in upload_json['actions'][0]['format']['enum']:
         with open(os.path.join(settings.IMAGES_ROOT, session_id, 'upload.' + format.lower()), 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
         return True
     else:
         logging.error('Format not supported')
-        return None
+        return False
