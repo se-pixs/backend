@@ -42,7 +42,7 @@ def handle_uploaded_file(f, format, session_id):
         logging.error("Could not open upload config")
         return False
 
-    if format.upper() in upload_json['actions'][0]['format']['enum']:
+    if format in upload_json['actions'][0]['format']['enum']:
         with open(os.path.join(settings.IMAGES_ROOT, session_id, 'upload.' + format.lower()), 'wb+') as destination:
             for chunk in f.chunks():
                 destination.write(chunk)
