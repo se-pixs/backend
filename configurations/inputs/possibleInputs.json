@@ -1,0 +1,8 @@
+{
+  "name": "possibleInputs",
+  "inputs": [
+    "valuefields",
+    "sliders",
+    "colorpickers"
+  ]
+}

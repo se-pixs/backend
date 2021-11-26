@@ -1,0 +1,42 @@
+{
+  "name": "change Format",
+  "description": "changes the format of the image to the provided format",
+  "helpMessage": "",
+  "icon": "testIcon.svg",
+  "path": "execute/changeFormat",
+  "parameters": {
+    "valuefields": [
+      {
+        "name": "format",
+        "description": "the format to change the image to",
+        "value": {
+          "type": "dropdown",
+          "range": [
+            "JPEG",
+            "PNG"
+          ],
+          "default": 0
+        }
+      }
+    ],
+    "colorpickers": [
+      {
+        "name": "color",
+        "description": "the color to change the image to",
+        "default": "#888888"
+      }
+    ],
+    "sliders": [
+      {
+        "name": "brightness",
+        "description": "the brightness to change the image to",
+        "value": {
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 50
+        }
+      }
+    ]
+  }
+}

@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+import os.path as path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +29,18 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+IMAGES_ROOT = os.path.join(BASE_DIR, 'images')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+# custom variables
+SESSION_EXPIRATION_TIME = 10 * 60
+ACTIONS_PATH = path.join('configurations', 'actions-dev.json')
+CUSTOM_ACTIONS_PATH = path.join('configurations', 'actions-dev')
+INPUTS_PATH = path.join('configurations', 'inputs')
+POSSIBLE_INPUTS_PATH = path.join(INPUTS_PATH, 'possibleInputs.json')
+IMAGES_ROOT_PATH = path.join('images')
+ICONS_PATH = path.join('configurations', 'icons')
 
 # Application definition
 
@@ -54,7 +68,7 @@ ROOT_URLCONF = 'PiXS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['upload/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -118,3 +132,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
