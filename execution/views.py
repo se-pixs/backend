@@ -58,6 +58,10 @@ def execute_change_format(parameters, session_id):
     # TODO dynamic parsing to dictionarys for easier access of the parameters
     # TODO include code for setting the fill color for PNG to JPEG conversion
     convert_format = parameters_json['parameters']['valuefields'][0]['value']
+    fill_color = parameters_json['parameters']['colorpicker'][0]['input']['red'], \
+                 parameters_json['parameters']['colorpicker'][0]['input']['green'], \
+                 parameters_json['parameters']['colorpicker'][0]['input']['blue']
+
     if convert_format not in action_config_json['parameters']['valuefields'][0]['value']['range']:
         logging.error("Format not allowed")
         return HttpResponseServerError("Format not in range")
@@ -73,6 +77,11 @@ def execute_change_format(parameters, session_id):
                         image = Image.open(os.path.join(image_path, file))
                         image_name = file.split('.')[0] + '.' + convert_format
                         if convert_format == 'JPEG':
+                            image = image.convert("RGBA")
+                            if image.mode in ('RGBA', 'LA'):
+                                im_background = Image.new(image.mode[:-1], image.size, fill_color)
+                                im_background.paste(image, image.split()[-1])
+                                image = im_background
                             image.convert("RGB").save(os.path.join(image_path, image_name), "JPEG")
                         elif convert_format == 'PNG':
                             image.convert("RGBA").save(os.path.join(image_path, image_name), "PNG")
