@@ -29,9 +29,6 @@ def index(request):
 
 
 def handle_uploaded_file(f, format, session_id):
-    if not os.path.exists(settings.IMAGES_ROOT):
-        os.makedirs(os.path.join(settings.IMAGES_ROOT, session_id))
-
     if not os.path.exists(os.path.join(settings.IMAGES_ROOT, session_id)):
         os.makedirs(os.path.join(settings.IMAGES_ROOT, session_id))
 
