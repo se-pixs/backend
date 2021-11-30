@@ -58,9 +58,9 @@ def execute_change_format(parameters, session_id):
     # TODO dynamic parsing to dictionarys for easier access of the parameters
     # TODO include code for setting the fill color for PNG to JPEG conversion
     convert_format = parameters_json['parameters']['valuefields'][0]['value']
-    fill_color = parameters_json['parameters']['colorpicker'][0]['input']['red'], \
-                 parameters_json['parameters']['colorpicker'][0]['input']['green'], \
-                 parameters_json['parameters']['colorpicker'][0]['input']['blue']
+    fill_color = parameters_json['parameters']['colorpickers'][0]['input']['red'], \
+                 parameters_json['parameters']['colorpickers'][0]['input']['green'], \
+                 parameters_json['parameters']['colorpickers'][0]['input']['blue']
 
     if convert_format not in action_config_json['parameters']['valuefields'][0]['value']['range']:
         logging.error("Format not allowed")
