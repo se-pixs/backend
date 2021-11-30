@@ -70,20 +70,9 @@ def replace_icons(actions_json):
     for action in actions_json['actions']:
         if 'icon' in action:
             if action['icon'] != "":
-                try:
-                    # replace icon with corresponding svg tag
-                    icon_path = join(settings.ICONS_PATH, action['icon'])
-                    icon_svg = open(icon_path)
-                    doc = minidom.parse(icon_svg)
-                    svg_string = doc.getElementsByTagName('svg')[0].toxml()
-                    action.update({'icon': svg_string})
-                except IOError:
-                    logging.error('Could not open icon file with path: ' + icon_path)
-                    # clean up
-                    icon_svg.close()
-
-                # clean up
-                icon_svg.close()
+                # replace icon with corresponding svg tag
+                icon_path = 'servestatic/' + 'icon/' + action['icon']
+                action.update({'icon': icon_path})
 
     return actions_json
 

@@ -31,6 +31,16 @@ def index(request):
 def handle_uploaded_file(f, format, session_id):
     if not os.path.exists(os.path.join(settings.IMAGES_ROOT, session_id)):
         os.makedirs(os.path.join(settings.IMAGES_ROOT, session_id))
+    else:
+        # clear directory
+        try:
+            for file in os.listdir(os.path.join(settings.IMAGES_ROOT, session_id)):
+                file_path = os.path.join(settings.IMAGES_ROOT, session_id, file)
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+        except Exception as e:
+            logging.error(e)
+            return False
 
     # open upload config
     try:

@@ -21,5 +21,6 @@ urlpatterns = [
     path('upload/', include('upload.urls')),
     path('download/', include('download.urls')),
     path('execute/', include('execution.urls')),
+    path('servestatic/', include('servestatic.urls')),
     path('', include('actions.urls')),
 ]
