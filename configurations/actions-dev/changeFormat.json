@@ -11,10 +11,7 @@
         "description": "the format to change the image to",
         "value": {
           "type": "dropdown",
-          "range": [
-            "JPEG",
-            "PNG"
-          ],
+          "range": ["JPEG", "PNG"],
           "default": 0
         }
       }
