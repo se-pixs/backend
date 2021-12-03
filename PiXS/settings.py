@@ -26,6 +26,8 @@ SECRET_KEY = 'ud)mmdi)*o5_ecilzcd(j3kddzr-hqbgv*2xzv1m+%68uy$60w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SESSION_COOKIE_HTTPONLY = False
+
 ALLOWED_HOSTS = []
 
 IMAGES_ROOT = os.path.join(BASE_DIR, 'images')
