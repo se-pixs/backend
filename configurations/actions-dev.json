@@ -10,10 +10,7 @@
       "path": "/upload",
       "format": {
         "type": "string",
-        "enum": [
-          "JPEG",
-          "PNG"
-        ]
+        "enum": ["JPEG", "PNG"]
       },
       "source": {
         "type": "string"
@@ -27,14 +24,9 @@
       "path": "/download",
       "format": {
         "type": "string",
-        "enum": [
-          "JPEG",
-          "PNG"
-        ]
+        "enum": ["JPEG", "PNG"]
       }
     }
   ],
-  "customActions": [
-    "changeFormat"
-  ]
+  "customActions": ["changeFormat", "convertToLowPoly"]
 }

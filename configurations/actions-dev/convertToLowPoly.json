@@ -1,0 +1,21 @@
+{
+  "name": "convert to low poly",
+  "description": "changes the image to a low poly version",
+  "helpMessage": "",
+  "icon": "testIcon.svg",
+  "path": "execute/convertToLowPoly",
+  "parameters": {
+    "sliders": [
+      {
+        "name": "polygons",
+        "description": "the amount of polygons used in the low poly version",
+        "value": {
+          "min": 10,
+          "max": 100,
+          "step": 1,
+          "default": 50
+        }
+      }
+    ]
+  }
+}
