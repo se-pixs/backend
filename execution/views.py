@@ -1,6 +1,7 @@
 import logging
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseServerError, HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from .forms import ChangeFormatForm
 
@@ -20,32 +21,35 @@ def index(request):
         return HttpResponse("Session not valid")
 
 
+@csrf_exempt
 def change_format(request):
     if 'session_id' in request.session:
         request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
         session_id = request.session['session_id']
         if request.method == 'POST':
-            form = ChangeFormatForm(request.POST, request.FILES)
-            if form.is_valid():
-                return execute_change_format(request.FILES['parameters'], session_id)
-            else:
-                return HttpResponseServerError("Form is not valid")
+            try:
+                parameters = json.loads(request.body.decode('utf-8'))
+            except json.JSONDecodeError:
+                return HttpResponseServerError("Parameters not valid")
+            return execute_change_format(parameters, session_id)
         else:
             form = ChangeFormatForm()
             return render(request, 'form.html', {'form': form})
     else:
         return HttpResponseServerError('Session not valid')  # TODO appropriate error handling
 
+
+@csrf_exempt
 def convert_to_low_poly(request):
     if 'session_id' in request.session:
         request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
         session_id = request.session['session_id']
         if request.method == 'POST':
-            form = ChangeFormatForm(request.POST, request.FILES)
-            if form.is_valid():
-                return execute_change_to_low_poly(request.FILES['parameters'], session_id)
-            else:
-                return HttpResponseServerError("Form is not valid")
+            try:
+                parameters = json.loads(request.body.decode('utf-8'))
+            except json.JSONDecodeError:
+                return HttpResponseServerError("Parameters not valid")
+            return execute_change_to_low_poly(parameters, session_id)
         else:
             form = ChangeFormatForm()
             return render(request, 'form.html', {'form': form})
@@ -55,11 +59,6 @@ def convert_to_low_poly(request):
 
 def execute_change_to_low_poly(parameters, session_id):
     image_path = os.path.join(settings.IMAGES_ROOT, session_id)
-    try:
-        parameters_json = json.loads(parameters.read())
-    except json.JSONDecodeError:
-        logging.error("Parameters are not valid JSON")
-        return HttpResponseServerError("Parameters are not valid JSON")
 
     # open action configuration
     try:
@@ -71,7 +70,7 @@ def execute_change_to_low_poly(parameters, session_id):
     except json.JSONDecodeError:
         logging.error("Action configuration is not valid JSON")
         return HttpResponseServerError("Action configuration is not valid JSON")
-    # polygons = parameters_json['parameters']['sliders'][0]['value']
+    # polygons = parameters['parameters']['sliders'][0]['value']
     # if polygons > action_config_json['parameters']['sliders'][0]['value']['max'] or polygons < action_config_json['parameters']['sliders'][0]['value']['min']:
     #     logging.error("Amount of Polygon not allowed")
         return HttpResponseServerError("Polygons not in range of allowed values")
@@ -104,12 +103,6 @@ def execute_change_to_low_poly(parameters, session_id):
 
 def execute_change_format(parameters, session_id):
     image_path = os.path.join(settings.IMAGES_ROOT, session_id)
-    try:
-        parameters_json = json.loads(parameters.read())
-    except json.JSONDecodeError:
-        logging.error("Parameters are not valid JSON")
-        return HttpResponseServerError("Parameters are not valid JSON")
-
     # open action configuration
     try:
         action_path = os.path.join(settings.CUSTOM_ACTIONS_PATH, 'changeFormat.json')
@@ -123,10 +116,10 @@ def execute_change_format(parameters, session_id):
 
     # TODO dynamic parsing to dictionarys for easier access of the parameters
     # TODO include code for setting the fill color for PNG to JPEG conversion
-    convert_format = parameters_json['parameters']['valuefields'][0]['value']
-    fill_color = parameters_json['parameters']['colorpickers'][0]['input']['red'], \
-                 parameters_json['parameters']['colorpickers'][0]['input']['green'], \
-                 parameters_json['parameters']['colorpickers'][0]['input']['blue']
+    convert_format = parameters['parameters']['valuefields'][0]['value']
+    fill_color = parameters['parameters']['colorpickers'][0]['input']['red'], \
+                 parameters['parameters']['colorpickers'][0]['input']['green'], \
+                 parameters['parameters']['colorpickers'][0]['input']['blue']
 
     if convert_format not in action_config_json['parameters']['valuefields'][0]['value']['range']:
         logging.error("Format not allowed")
