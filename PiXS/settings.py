@@ -26,6 +26,8 @@ SECRET_KEY = 'ud)mmdi)*o5_ecilzcd(j3kddzr-hqbgv*2xzv1m+%68uy$60w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+SESSION_COOKIE_HTTPONLY = False
+
 ALLOWED_HOSTS = []
 
 IMAGES_ROOT = os.path.join(BASE_DIR, 'images')
@@ -44,31 +46,33 @@ ICONS_PATH = path.join('configurations', 'icons')
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
 ]
 
-ROOT_URLCONF = 'PiXS.urls'
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
 ]
+
+ROOT_URLCONF = 'PiXS.urls'
 
 TEMPLATES = [
     {

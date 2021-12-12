@@ -4,6 +4,7 @@ import os
 from os.path import normpath, join
 from django.http import HttpResponse, HttpResponseServerError
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
 # add modules to path
 sys.path.append(normpath(join(os.getcwd(), 'configurations')))
@@ -16,6 +17,7 @@ from xml.dom import minidom
 
 
 # Create your views here.
+@csrf_exempt
 def index(request):
     # check if session id exists
     if 'session_id' in request.session:
@@ -34,7 +36,8 @@ def index(request):
         return HttpResponseServerError("An error occurred while providing the possible actions")
     else:
         request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
-        return HttpResponse(json.dumps(action_json), content_type='application/json')
+        response = HttpResponse(json.dumps(action_json), content_type='application/json')
+        return response
 
 
 # TODO : export to json methods to separate file
@@ -71,7 +74,7 @@ def replace_icons(actions_json):
         if 'icon' in action:
             if action['icon'] != "":
                 # replace icon with corresponding svg tag
-                icon_path = 'servestatic/' + 'icon/' + action['icon']
+                icon_path = '/servestatic/' + 'icon/' + action['icon']
                 action.update({'icon': icon_path})
 
     return actions_json

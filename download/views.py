@@ -36,7 +36,7 @@ def download(request):
                         content_type, encoding = mimetypes.guess_type(image_path)
                         if content_type is None:
                             content_type = "image/" + image_path.split('.')[-1]
-                        response = HttpResponse(image, content_type=content_type)
+                        response = HttpResponse(image.read(), content_type=content_type)
                         return response
                 else:
                     # no images
