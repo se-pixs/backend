@@ -3,15 +3,15 @@
   "description": "Creates a swiping panorama from a set of images i.o. to upload them to Instagram.",
   "helpMessage": "",
   "icon": "testIcon.svg",
-  "path": "execute/instagramPanoSplit",
+  "path": "/execute/instagramPanoSplit",
   "parameters": {
     "valuefields": [
       {
         "name": "max_width",
         "description": "the maximum width of single pictures",
         "value": {
-          "min": 1,
-          "max": 2160,
+          "type": "integer",
+          "range": [1, 2160],
           "default": 1080
         }
       },
@@ -19,8 +19,8 @@
         "name": "max_height",
         "description": "the maximum height of single pictures",
         "value": {
-          "min": 1,
-          "max": 2160,
+          "type": "integer",
+          "range": [1, 2160],
           "default": 1080
         }
       }

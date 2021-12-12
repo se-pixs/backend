@@ -28,5 +28,5 @@
       }
     }
   ],
-  "customActions": ["changeFormat", "convertToLowPoly"]
+  "customActions": ["changeFormat", "convertToLowPoly", "igPanoSplit"]
 }

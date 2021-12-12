@@ -163,7 +163,7 @@ def replace_valuefield_input(custom_input):
     if custom_input['value']['type'] in default_valuefield_json['value']['type']:
         value_json.update({'type': custom_input['value']['type']})
         value_json.update({'range': custom_input['value']['range']})
-        value_json.update({'default': custom_input['value']['range'][custom_input['value']['default']]})
+        value_json.update({'default': custom_input['value']['default']})
     else:
         logging.error('Value type not supported: ' + custom_input['value']['type'])
         # clean up

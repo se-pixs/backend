@@ -41,18 +41,17 @@ def change_format(request):
         return HttpResponseServerError('Session not valid')
 
 
-
 @csrf_exempt
 def convert_to_low_poly(request):
     if 'session_id' in request.session:
         request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
         session_id = request.session['session_id']
         if request.method == 'POST':
-          try:
-            parameters = json.loads(request.body.decode('utf-8'))
-            return execute_change_to_low_poly(parameters, session_id)
-          except json.JSONDecodeError:
-            return HttpResponseServerError("Parameters not valid")
+            try:
+                parameters = json.loads(request.body.decode('utf-8'))
+                return execute_change_to_low_poly(parameters, session_id)
+            except json.JSONDecodeError:
+                return HttpResponseServerError("Parameters not valid")
         else:
             form = ConvertToLowPolyForm()
             return render(request, 'form.html', {'form': form})
@@ -61,16 +60,17 @@ def convert_to_low_poly(request):
         return HttpResponseServerError('Session not valid')
 
 
+@csrf_exempt
 def ig_pano_split(request):
     if 'session_id' in request.session:
         request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
         session_id = request.session['session_id']
         if request.method == 'POST':
-            form = IGPanoSplitForm(request.POST, request.FILES)
-            if form.is_valid():
-                return execute_ig_pano_split(request.FILES['parameters'], session_id)
-            else:
-                return HttpResponseServerError("Form is not valid")
+            try:
+                parameters = json.loads(request.body.decode('utf-8'))
+                return execute_ig_pano_split(parameters, session_id)
+            except json.JSONDecodeError:
+                return HttpResponseServerError("Parameters not valid")
         else:
             form = IGPanoSplitForm()
             return render(request, 'form.html', {'form': form})
@@ -81,12 +81,6 @@ def ig_pano_split(request):
 
 def execute_ig_pano_split(parameters, session_id):
     image_path = os.path.join(settings.IMAGES_ROOT, session_id)
-    try:
-        parameters_json = json.loads(parameters.read())
-    except json.JSONDecodeError:
-        logging.error("Parameters are not valid JSON")
-        return HttpResponseServerError("Parameters are not valid JSON")
-
     # open action configuration
     try:
         action_path = os.path.join(
@@ -102,17 +96,17 @@ def execute_ig_pano_split(parameters, session_id):
     # check if parameters are valid
     # ? is this necessary?
     max_width = next(x for x in filter(
-        lambda x: x['name'] == 'max_width', parameters_json['parameters']['valuefields']))['value']
+        lambda x: x['name'] == 'max_width', parameters['parameters']['valuefields']))['value']
     max_height = next(x for x in filter(
-        lambda x: x['name'] == 'max_height', parameters_json['parameters']['valuefields']))['value']
+        lambda x: x['name'] == 'max_height', parameters['parameters']['valuefields']))['value']
     min_allowed_width = next(x for x in filter(
-        lambda x: x['name'] == 'max_width', action_config_json['parameters']['valuefields']))['value']['min']
+        lambda x: x['name'] == 'max_width', action_config_json['parameters']['valuefields']))['value']['range'][0]
     max_allowed_width = next(x for x in filter(
-        lambda x: x['name'] == 'max_width', action_config_json['parameters']['valuefields']))['value']['max']
+        lambda x: x['name'] == 'max_width', action_config_json['parameters']['valuefields']))['value']['range'][1]
     min_allowed_height = next(x for x in filter(
-        lambda x: x['name'] == 'max_height', action_config_json['parameters']['valuefields']))['value']['min']
+        lambda x: x['name'] == 'max_height', action_config_json['parameters']['valuefields']))['value']['range'][0]
     max_allowed_height = next(x for x in filter(
-        lambda x: x['name'] == 'max_height', action_config_json['parameters']['valuefields']))['value']['max']
+        lambda x: x['name'] == 'max_height', action_config_json['parameters']['valuefields']))['value']['range'][1]
     if max_width < min_allowed_width or max_width > max_allowed_width:
         logging.error("Image width is not valid")
         return HttpResponseServerError("Image width is not valid. Got image width: " + str(max_width))
@@ -141,16 +135,16 @@ def execute_ig_pano_split(parameters, session_id):
                         if height > max_height:
                             # crop image to max_height
                             image = image.crop(
-                                (0, int(height/2-(max_height/2)), width, int(height/2+(max_height/2))))
+                                (0, int(height / 2 - (max_height / 2)), width, int(height / 2 + (max_height / 2))))
                             image.save(os.path.join(image_path, file), "JPEG")
                         if width > max_width:
                             # crop image to max_width
-                            amount_of_splits = int(width/max_width)
+                            amount_of_splits = int(width / max_width)
                             for i in range(amount_of_splits):
                                 tempImage = image.crop(
-                                    (int(i*max_width), 0, int((i+1)*max_width), height))
+                                    (int(i * max_width), 0, int((i + 1) * max_width), height))
                                 tempImage.save(os.path.join(
-                                    image_path, "upload_"+str(i)+".jpg"), "JPEG")
+                                    image_path, "upload_" + str(i) + ".jpg"), "JPEG")
                     except FileNotFoundError as e:
                         logging.error("File not found: " +
                                       os.path.join(image_path, file))
@@ -181,8 +175,9 @@ def execute_change_to_low_poly(parameters, session_id):
     except json.JSONDecodeError:
         logging.error("Action configuration is not valid JSON")
         return HttpResponseServerError("Action configuration is not valid JSON")
-    polygons = parameters_json['parameters']['sliders'][0]['value']
-    if polygons > action_config_json['parameters']['sliders'][0]['value']['max'] or polygons < action_config_json['parameters']['sliders'][0]['value']['min']:
+    polygons = parameters['parameters']['sliders'][0]['value']
+    if polygons > action_config_json['parameters']['sliders'][0]['value']['max'] or polygons < \
+            action_config_json['parameters']['sliders'][0]['value']['min']:
         logging.error("Amount of Polygon not allowed")
         return HttpResponseServerError("Polygons not in range of allowed values")
     if os.path.exists(image_path):
