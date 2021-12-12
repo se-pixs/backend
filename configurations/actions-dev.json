@@ -7,7 +7,7 @@
       "description": "Upload a file",
       "helpMessage": "",
       "icon": "",
-      "path": "/upload",
+      "path": "/upload/",
       "format": {
         "type": "string",
         "enum": ["JPEG", "PNG"]

@@ -1,6 +1,7 @@
 import logging
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseServerError, HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from .forms import ChangeFormatForm, ConvertToLowPolyForm, IGPanoSplitForm
 
@@ -21,16 +22,17 @@ def index(request):
         return HttpResponse("Session not valid")
 
 
+@csrf_exempt
 def change_format(request):
     if 'session_id' in request.session:
         request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
         session_id = request.session['session_id']
         if request.method == 'POST':
-            form = ChangeFormatForm(request.POST, request.FILES)
-            if form.is_valid():
-                return execute_change_format(request.FILES['parameters'], session_id)
-            else:
-                return HttpResponseServerError("Form is not valid")
+            try:
+                parameters = json.loads(request.body.decode('utf-8'))
+            except json.JSONDecodeError:
+                return HttpResponseServerError("Parameters not valid")
+            return execute_change_format(parameters, session_id)
         else:
             form = ChangeFormatForm()
             return render(request, 'form.html', {'form': form})
@@ -39,16 +41,18 @@ def change_format(request):
         return HttpResponseServerError('Session not valid')
 
 
+
+@csrf_exempt
 def convert_to_low_poly(request):
     if 'session_id' in request.session:
         request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
         session_id = request.session['session_id']
         if request.method == 'POST':
-            form = ConvertToLowPolyForm(request.POST, request.FILES)
-            if form.is_valid():
-                return execute_change_to_low_poly(request.FILES['parameters'], session_id)
-            else:
-                return HttpResponseServerError("Form is not valid")
+          try:
+            parameters = json.loads(request.body.decode('utf-8'))
+            return execute_change_to_low_poly(parameters, session_id)
+          except json.JSONDecodeError:
+            return HttpResponseServerError("Parameters not valid")
         else:
             form = ConvertToLowPolyForm()
             return render(request, 'form.html', {'form': form})
@@ -165,11 +169,6 @@ def execute_ig_pano_split(parameters, session_id):
 
 def execute_change_to_low_poly(parameters, session_id):
     image_path = os.path.join(settings.IMAGES_ROOT, session_id)
-    try:
-        parameters_json = json.loads(parameters.read())
-    except json.JSONDecodeError:
-        logging.error("Parameters are not valid JSON")
-        return HttpResponseServerError("Parameters are not valid JSON")
 
     # open action configuration
     try:
@@ -217,12 +216,6 @@ def execute_change_to_low_poly(parameters, session_id):
 
 def execute_change_format(parameters, session_id):
     image_path = os.path.join(settings.IMAGES_ROOT, session_id)
-    try:
-        parameters_json = json.loads(parameters.read())
-    except json.JSONDecodeError:
-        logging.error("Parameters are not valid JSON")
-        return HttpResponseServerError("Parameters are not valid JSON")
-
     # open action configuration
     try:
         action_path = os.path.join(
@@ -237,7 +230,11 @@ def execute_change_format(parameters, session_id):
 
     # TODO dynamic parsing to dictionarys for easier access of the parameters
     # TODO include code for setting the fill color for PNG to JPEG conversion
-    convert_format = parameters_json['parameters']['valuefields'][0]['value']
+    convert_format = parameters['parameters']['valuefields'][0]['value']
+    fill_color = parameters['parameters']['colorpickers'][0]['input']['red'], \
+                 parameters['parameters']['colorpickers'][0]['input']['green'], \
+                 parameters['parameters']['colorpickers'][0]['input']['blue']
+
     if convert_format not in action_config_json['parameters']['valuefields'][0]['value']['range']:
         logging.error("Format not allowed")
         return HttpResponseServerError("Format not in range")
@@ -253,8 +250,12 @@ def execute_change_format(parameters, session_id):
                         image = Image.open(os.path.join(image_path, file))
                         image_name = file.split('.')[0] + '.' + convert_format
                         if convert_format == 'JPEG':
-                            image.convert("RGB").save(
-                                os.path.join(image_path, image_name), "JPEG")
+                            image = image.convert("RGBA")
+                            if image.mode in ('RGBA', 'LA'):
+                                im_background = Image.new(image.mode[:-1], image.size, fill_color)
+                                im_background.paste(image, image.split()[-1])
+                                image = im_background
+                            image.convert("RGB").save(os.path.join(image_path, image_name), "JPEG")
                         elif convert_format == 'PNG':
                             image.convert("RGBA").save(
                                 os.path.join(image_path, image_name), "PNG")

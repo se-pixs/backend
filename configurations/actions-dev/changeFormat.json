@@ -3,7 +3,7 @@
   "description": "changes the format of the image to the provided format",
   "helpMessage": "",
   "icon": "testIcon.svg",
-  "path": "execute/changeFormat",
+  "path": "/execute/changeFormat",
   "parameters": {
     "valuefields": [
       {
@@ -18,9 +18,9 @@
     ],
     "colorpickers": [
       {
-        "name": "color",
-        "description": "the color to change the image to",
-        "default": "#888888"
+        "name": "fillcolor",
+        "description": "the color to change background to",
+        "default": "#FFFFFF"
       }
     ],
     "sliders": [
