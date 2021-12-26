@@ -34,14 +34,16 @@ IMAGES_ROOT = os.path.join(BASE_DIR, 'images')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-# custom variables
-SESSION_EXPIRATION_TIME = 10 * 60
-ACTIONS_PATH = path.join('configurations', 'actions-dev.json')
-CUSTOM_ACTIONS_PATH = path.join('configurations', 'actions-dev')
-INPUTS_PATH = path.join('configurations', 'inputs')
-POSSIBLE_INPUTS_PATH = path.join(INPUTS_PATH, 'possibleInputs.json')
-IMAGES_ROOT_PATH = path.join('images')
-ICONS_PATH = path.join('configurations', 'icons')
+# custom variables set by config
+CONFIG_FILE_PATH = os.path.join('configurations', 'server-config.json')
+CONFIG_PATH: None
+SESSION_EXPIRATION_TIME = None
+ACTIONS_PATH = None
+CUSTOM_ACTIONS_PATH = None
+INPUTS_PATH = None
+POSSIBLE_INPUTS_PATH = None
+IMAGES_ROOT_PATH = None
+ICONS_PATH = None
 
 # Application definition
 

@@ -13,6 +13,7 @@ sys.path.append(normpath(join(os.getcwd(), 'configurations')))
 import uuid
 import logging
 import json
+import utils.actionAssembler as actionAssembler
 from xml.dom import minidom
 
 
@@ -122,6 +123,7 @@ def insert_inputs(custom_action_json):
         return None
 
     # add all defined inputs to result json
+    # TODO : make calling of replace function dynamic
     for input in possible_inputs_json['inputs']:
         result_json['parameters'].update({input: []})
         if input in custom_action_json['parameters']:

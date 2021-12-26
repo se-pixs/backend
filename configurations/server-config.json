@@ -1,0 +1,22 @@
+{
+  "development": {
+    "SESSION_EXPIRATION_TIME": 600,
+    "CONFIG_PATH": "configurations",
+    "ACTIONS": "actions-dev.json",
+    "CUSTOM_ACTIONS": "actions-dev",
+    "INPUTS": "inputs",
+    "POSSIBLE_INPUTS": "possibleInputs.json",
+    "IMAGES_ROOT": "images",
+    "ICONS": "icons"
+  },
+  "production": {
+    "SESSION_EXPIRATION_TIME": 600,
+    "CONFIG_PATH": "configurations",
+    "ACTIONS": "actions-prod.json",
+    "CUSTOM_ACTIONS": "actions-prod",
+    "INPUTS": "inputs",
+    "POSSIBLE_INPUTS": "possibleInputs.json",
+    "IMAGES_ROOT": "images",
+    "ICONS": "icons"
+  }
+}
