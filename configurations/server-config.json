@@ -1,13 +1,16 @@
 {
+  "SERVER_SETUP_LOGGING_PATH": "./logs/",
   "development": {
-    "SESSION_EXPIRATION_TIME": 600,
+    "SESSION_EXPIRATION_TIME": 6000,
     "CONFIG_PATH": "configurations",
     "ACTIONS": "actions-dev.json",
     "CUSTOM_ACTIONS": "actions-dev",
     "INPUTS": "inputs",
     "POSSIBLE_INPUTS": "possibleInputs.json",
     "IMAGES_ROOT": "images",
-    "ICONS": "icons"
+    "ICONS": "icons",
+    "LOGGING_PATH": "logs",
+    "ACTION_ASSEMBLER_LOG_PATH": "actionAssemblerLogs"
   },
   "production": {
     "SESSION_EXPIRATION_TIME": 600,

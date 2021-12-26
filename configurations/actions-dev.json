@@ -11,9 +11,6 @@
       "format": {
         "type": "string",
         "enum": ["JPEG", "PNG"]
-      },
-      "source": {
-        "type": "string"
       }
     },
     {
