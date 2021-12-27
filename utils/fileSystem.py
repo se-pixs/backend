@@ -1,5 +1,9 @@
 from django.conf import settings
+from django.http import HttpResponse, FileResponse
+from zipfile import ZipFile
+from utils.miscellaneous import validate_request_session
 import os
+import mimetypes
 import shutil
 
 
@@ -49,9 +53,79 @@ def save_file(file, name, session_id):
 
 
 def save_image(image, image_format, session_id):
+    orderly_clear_images(session_id)
     save_file(image, 'upload.' + image_format.lower(), session_id)
 
 
 def save_images(images, image_format, session_id):
+    orderly_clear_images(session_id)
     for index, image in enumerate(images):
         save_file(image, 'upload{}.'.format(index + 1) + image_format.lower(), session_id)
+
+
+def check_image_destination(session_id):
+    """
+    Check if image destination exists
+    """
+    if not os.path.exists(os.path.join(settings.IMAGES_ROOT, session_id)):
+        return False
+    return True
+
+
+def extract_image_dir(session_id):
+    """
+    Extract image directory
+    """
+    image_path = os.path.join(settings.IMAGES_ROOT, session_id)
+    if check_image_destination(session_id):
+        files = [name for name in os.listdir(image_path) if
+                 os.path.isfile(os.path.join(image_path, name))]
+        file_count = len(files)
+        if file_count > 0:
+            if file_count > 1:
+                # return as zip
+                return FileResponse(extract_files_to_zip(image_path, files))
+            else:
+                # return as image
+                image_path = os.path.join(image_path, files[0])
+                read_image_to_http_response(image_path)
+        else:
+            pass
+
+
+def extract_files_to_zip(path, files):
+    """
+    Extract image directory to zip
+    """
+    with ZipFile(os.path.join(path, 'download.zip'), 'w') as zip_file:
+        for file in files:
+            zip.write(os.path.join(path, file))
+
+        return zip_file
+
+
+def read_image_to_http_response(image_path):
+    with open(image_path, 'rb') as image:
+        content_type, encoding = mimetypes.guess_type(image_path)
+        if content_type is None:
+            content_type = "image/" + image_path.split('.')[-1]
+        return HttpResponse(image.read(), content_type=content_type)
+
+
+def get_from_image_root(session_id):
+    images = []
+    if validate_request_session(session_id):
+        if check_image_destination(session_id):
+            image_path = os.path.join(settings.IMAGES_ROOT, session_id)
+            files = [name for name in os.listdir(image_path) if
+                     os.path.isfile(os.path.join(image_path, name))]
+            file_count = len(files)
+            if file_count > 0:
+                for f in files:
+                    images.append(os.path.join(image_path, f))
+            else:
+                pass
+
+
+
+

@@ -9,12 +9,12 @@ from django.conf import settings
 import os
 import json
 from utils.fileSystem import *
-from utils.miscellaneous import open_json
+from utils.miscellaneous import open_json, validate_request_session
 
 
 @csrf_exempt
 def index(request):
-    if 'session_id' in request.session:
+    if validate_request_session(request):
         request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
         session_id = request.session['session_id']
         if request.method == 'POST':
@@ -41,7 +41,6 @@ def handle_uploaded_file(f, format, session_id):
         return False
 
     if format in upload_json['actions'][0]['format']['enum']:
-        orderly_clear_images(session_id)
         save_image(f, format.lower(), session_id)
         return True
     else:

@@ -13,6 +13,7 @@ from PIL import Image
 from utils.parameterParser import parseParameters
 import json
 import math
+import action_scripts as actions
 
 from utils.miscellaneous import validate_request_session
 
@@ -36,29 +37,13 @@ def execute(request, action_name):
                 return HttpResponseServerError("Parameters not valid json")
 
             # dynamic calling of the script
+            action_script_method = getattr(actions, action_name)
+            action_result = action_script_method()
+            # TODO http response
         else:
             form = GeneralForm()
             return render(request, 'form.html', {'form': form})
     else:
-        return HttpResponseServerError('Session not valid')
-
-
-@csrf_exempt
-def change_format(request):
-    if 'session_id' in request.session:
-        request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
-        session_id = request.session['session_id']
-        if request.method == 'POST':
-            try:
-                parameters = json.loads(request.body.decode('utf-8'))
-            except json.JSONDecodeError:
-                return HttpResponseServerError("Parameters not valid")
-            return execute_change_format(parameters, session_id)
-        else:
-            form = ChangeFormatForm()
-            return render(request, 'form.html', {'form': form})
-    else:
-        # TODO appropriate error handling
         return HttpResponseServerError('Session not valid')
 
 
@@ -231,67 +216,4 @@ def execute_change_to_low_poly(parameters, session_id):
     return HttpResponseRedirect('/')
 
 
-def execute_change_format(parameters, session_id):
-    image_path = os.path.join(settings.IMAGES_ROOT, session_id)
-    # open action configuration
-    try:
-        action_path = os.path.join(
-            settings.CUSTOM_ACTIONS_PATH, 'changeFormat.json')
-        action_config_json = json.loads(open(action_path).read())
-    except IOError:
-        logging.error("Could not open action configuration")
-        return HttpResponseServerError("Action configuration not found for: " + action_path)
-    except json.JSONDecodeError:
-        logging.error("Action configuration is not valid JSON")
-        return HttpResponseServerError("Action configuration is not valid JSON")
 
-    # TODO dynamic parsing to dictionarys for easier access of the parameters
-    # TODO include code for setting the fill color for PNG to JPEG conversion
-    convert_format = parameters['parameters']['valuefields'][0]['value']
-    fill_color = parameters['parameters']['colorpickers'][0]['input']['red'], \
-                 parameters['parameters']['colorpickers'][0]['input']['green'], \
-                 parameters['parameters']['colorpickers'][0]['input']['blue']
-
-    if convert_format not in action_config_json['parameters']['valuefields'][0]['value']['range']:
-        logging.error("Format not allowed")
-        return HttpResponseServerError("Format not in range")
-
-    if os.path.exists(image_path):
-        file_count = len([name for name in os.listdir(image_path) if
-                          os.path.isfile(os.path.join(image_path, name))])
-        if file_count > 0:
-            images_found = os.listdir(image_path)
-            for file in images_found:
-                if os.path.isfile(os.path.join(image_path, file)):
-                    try:
-                        image = Image.open(os.path.join(image_path, file))
-                        image_name = file.split('.')[0] + '.' + convert_format
-                        if convert_format == 'JPEG':
-                            image = image.convert("RGBA")
-                            if image.mode in ('RGBA', 'LA'):
-                                im_background = Image.new(image.mode[:-1], image.size, fill_color)
-                                im_background.paste(image, image.split()[-1])
-                                image = im_background
-                            image.convert("RGB").save(os.path.join(image_path, image_name), "JPEG")
-                        elif convert_format == 'PNG':
-                            image.convert("RGBA").save(
-                                os.path.join(image_path, image_name), "PNG")
-                        else:
-                            logging.error("Format not allowed")
-                            return HttpResponseServerError("Format not allowed")
-                        if file != image_name:
-                            os.remove(os.path.join(image_path, file))
-                    except FileNotFoundError:
-                        logging.error("File not found: " +
-                                      os.path.join(image_path, file))
-                        return HttpResponseServerError("File not found")
-                    except OSError as e:
-                        print(format(e))
-                        # TODO proper error handling
-                        logging.error("Error while handling image")
-                        return HttpResponseServerError("Error while handling image")
-        else:
-            return HttpResponseServerError("No files found")
-    else:
-        return HttpResponseServerError("No image uploaded")
-    return HttpResponseRedirect('/')
