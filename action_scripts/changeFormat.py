@@ -8,7 +8,7 @@ def changeFormat(parameters, session_id):
     # TODO error handling
     """
     :param parameters: already parsed and checked parameters
-    :param session_id: session id of the user
+    :param session_id: already validated session id of the user
     """
     image_path = build_image_root_by_id(session_id)
     images = get_from_image_root(session_id)
