@@ -1,5 +1,6 @@
 {
-  "name": "convert to low poly",
+  "name": "convertToLowPoly",
+  "displayName": "Convert to low poly",
   "description": "changes the image to a low poly version",
   "helpMessage": "",
   "icon": "testIcon.svg",

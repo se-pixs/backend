@@ -1,5 +1,6 @@
 {
-  "name": "change Format",
+  "name": "changeFormat",
+  "displayName": "change Format",
   "description": "changes the format of the image to the provided format",
   "helpMessage": "",
   "icon": "testIcon.svg",

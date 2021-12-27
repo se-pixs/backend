@@ -3,23 +3,44 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseServerError, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from .forms import ChangeFormatForm, ConvertToLowPolyForm, IGPanoSplitForm
+from .forms import ChangeFormatForm, ConvertToLowPolyForm, IGPanoSplitForm, GeneralForm
 
 import triangler
 from skimage.io import imread
 import matplotlib.pyplot as plt
 import os
 from PIL import Image
+from utils.parameterParser import parseParameters
 import json
 import math
 
+from utils.miscellaneous import validate_request_session
+
 
 def index(request):
-    if 'session_id' in request.session:
-        request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
+    if validate_request_session(request):
         return HttpResponse("No action selected")
     else:
-        return HttpResponse("Session not valid")
+        return HttpResponseServerError('Session not valid')
+
+
+@csrf_exempt
+def execute(request, action_name):
+    if validate_request_session(request):
+        request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
+        session_id = request.session['session_id']
+        if request.method == 'POST':
+            try:
+                parameters = json.loads(request.body.decode('utf-8'))
+            except json.JSONDecodeError:
+                return HttpResponseServerError("Parameters not valid json")
+
+            # dynamic calling of the script
+        else:
+            form = GeneralForm()
+            return render(request, 'form.html', {'form': form})
+    else:
+        return HttpResponseServerError('Session not valid')
 
 
 @csrf_exempt
@@ -68,6 +89,7 @@ def ig_pano_split(request):
         if request.method == 'POST':
             try:
                 parameters = json.loads(request.body.decode('utf-8'))
+                parseParameters(parameters)
                 return execute_ig_pano_split(parameters, session_id)
             except json.JSONDecodeError:
                 return HttpResponseServerError("Parameters not valid")
