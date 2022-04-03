@@ -21,6 +21,8 @@ def configure_server_settings(mode, server_settings):
         settings.CONFIG_PATH = server_setting['CONFIG_PATH']
         settings.ACTIONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['ACTIONS'])
         settings.CUSTOM_ACTIONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['CUSTOM_ACTIONS'])
+        settings.BASE_ACTIONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['BASE_ACTIONS'])
+        settings.INIT_ACTIONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['INIT_ACTIONS'])
         settings.INPUTS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['INPUTS'])
         settings.POSSIBLE_INPUTS_PATH = os.path.join(settings.INPUTS_PATH, server_setting['POSSIBLE_INPUTS'])
         settings.IMAGES_ROOT_PATH = os.path.join(settings.CONFIG_PATH, server_setting['IMAGES_ROOT'])
@@ -41,6 +43,8 @@ def configure_server_settings(mode, server_settings):
         settings.CONFIG_PATH = server_setting['CONFIG_PATH']
         settings.ACTIONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['ACTIONS'])
         settings.CUSTOM_ACTIONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['CUSTOM_ACTIONS'])
+        settings.BASE_ACTIONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['BASE_ACTIONS'])
+        settings.INIT_ACTIONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['INIT_ACTIONS'])
         settings.INPUTS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['INPUTS'])
         settings.POSSIBLE_INPUTS_PATH = os.path.join(settings.INPUTS_PATH, server_setting['POSSIBLE_INPUTS'])
         settings.IMAGES_ROOT_PATH = os.path.join(settings.CONFIG_PATH, server_setting['IMAGES_ROOT'])

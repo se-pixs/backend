@@ -18,7 +18,7 @@ def index(request):
         request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
         session_id = request.session['session_id']
         if request.method == 'POST':
-            if handle_uploaded_file(request.FILES['file'], request.POST['format'], session_id):
+            if handle_uploaded_file(request.FILES['file'], request.POST.get('format'), session_id):
                 return HttpResponseRedirect('/')
             else:
                 return HttpResponseServerError('Format not supported')  # TODO add error page

@@ -72,6 +72,20 @@ def check_image_destination(session_id):
     return True
 
 
+def check_image_exists(session_id):
+    """
+    Check if any images exist
+    """
+    image_path = os.path.join(settings.IMAGES_ROOT, session_id)
+    if os.path.exists(image_path):
+        files = [name for name in os.listdir(image_path) if
+                 os.path.isfile(os.path.join(image_path, name))]
+        file_count = len(files)
+        if file_count > 0:
+            return True
+    return False
+
+
 def extract_image_dir(session_id):
     """
     Extract image directory
@@ -126,6 +140,4 @@ def get_from_image_root(session_id):
             else:
                 pass
 
-
-
-
+    return images

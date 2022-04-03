@@ -10,7 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 import uuid
 import logging
 import json
-from utils.actionAssembler import assemble_actions
+from utils.actionAssembler import assemble_actions, assemble_init_actions
+from utils.fileSystem import check_image_exists
 
 # add modules to path
 sys.path.append(normpath(join(os.getcwd(), 'configurations')))
@@ -19,17 +20,23 @@ sys.path.append(normpath(join(os.getcwd(), 'configurations')))
 # Create your views here.
 @csrf_exempt
 def index(request):
-    # check if session id exists
+    # check if session id exists # TODO check if session id is a valid one
     if 'session_id' in request.session:
         session_id = request.session['session_id']
     else:
         # set session id
         logging.info('Session ID not found, creating new session ID')
         # make uuid serializable because django bug
-        request.session['session_id'] = uuid.uuid4().hex
+        session_id = uuid.uuid4().hex
+        request.session['session_id'] = session_id
 
-    # send initial action json
-    action_json = assemble_actions()
+    # check if image exists
+    if not check_image_exists(session_id):
+        action_json = assemble_init_actions()
+    else:
+        # send initial action json
+        action_json = assemble_actions()
+
     if action_json is None:
         # Error while assembling actions; see server logs for more info
         return HttpResponseServerError("An error occurred while providing the possible actions")

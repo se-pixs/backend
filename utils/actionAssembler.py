@@ -3,24 +3,53 @@ import json
 from utils.miscellaneous import open_json
 import os
 
+# import all dynamic parameters
+import dynamic_functions as functions
 
-# TODO add exeception handling
+
+# TODO add exception handling
+def assemble_init_actions():
+    action_logger = settings.ACTION_ASSEMBLER_LOGGER
+    try:
+        actions_json = open_json(settings.ACTIONS_PATH)
+        actions_json['actions'] = []
+
+        for action in actions_json['initActions']:
+            init_action_path = os.path.join(settings.INIT_ACTIONS_PATH, action + '.json')
+            init_action_json = open_json(init_action_path)
+            actions_json['actions'].append(init_action_json)
+
+        clean_action_json(actions_json)
+
+        return actions_json
+    except IOError:
+        action_logger.error('Could not open actions file with path: ' + settings.ACTIONS_PATH)
+        return None
+
+
+# TODO add exception handling
 def assemble_actions():
     action_logger = settings.ACTION_ASSEMBLER_LOGGER
     try:
         actions_json = open_json(settings.ACTIONS_PATH)
+        actions_json['actions'] = []
+
+        # insert all base actions
+        for action in actions_json['baseActions']:
+            base_action_path = os.path.join(settings.BASE_ACTIONS_PATH, action + '.json')
+            base_action_json = open_json(base_action_path)
+            actions_json['actions'].append(base_action_json)
 
         # insert all custom actions into actions
         for action in actions_json['customActions']:
-            inserted_custom_action = insert_custom_action(action)
+            inserted_custom_action = insert_action(action)
             if inserted_custom_action is None:
                 action_logger.error('Could not insert custom action with name: ' + action)
                 return None
             actions_json['actions'].append(inserted_custom_action)
 
-        # remove custom actions
-        if 'customActions' in actions_json:
-            del actions_json['customActions']
+        # clean actions json from custom, base and init actions
+        clean_action_json(actions_json)
 
         actions_json = replace_icons(actions_json)
 
@@ -30,11 +59,21 @@ def assemble_actions():
         return None
 
 
-def insert_custom_action(custom_action_name):
+def clean_action_json(actions_json):
+    # remove custom, base and init actions
+    if 'customActions' in actions_json:
+        del actions_json['customActions']
+    if 'baseActions' in actions_json:
+        del actions_json['baseActions']
+    if 'initActions' in actions_json:
+        del actions_json['initActions']
+
+
+def insert_action(custom_action_name, actions_path=settings.CUSTOM_ACTIONS_PATH):
     action_logger = settings.ACTION_ASSEMBLER_LOGGER
     # check if custom action exists
     try:
-        custom_action_path = os.path.join(settings.CUSTOM_ACTIONS_PATH, custom_action_name + '.json')
+        custom_action_path = os.path.join(actions_path, custom_action_name + '.json')
         custom_action_json = open_json(custom_action_path)
 
         # replace parameters in custom action with input json
@@ -108,13 +147,15 @@ def replace_recursive(custom_input, input_json):
             if replacement_value is None:
                 return None
             if type(input_json[key]) is list and type(custom_input[key]) is not list:
+                # check if replacement value is a possible input value
                 if replacement_value not in input_json[key]:
                     action_logger.error('Could not find replacement value in possible inputs for key: ' + key)
                     return None
-                else:
-                    input_json[key] = replacement_value
-            else:
-                input_json[key] = replacement_value
+
+            # check if replacement value is a dynamic value
+            if replacement_value.startswith['$dynamic:']:
+                replacement_value = replace_dynamic_values(replacement_value.split(':')[-1])
+            input_json[key] = replacement_value
 
     return input_json
 
@@ -129,3 +170,8 @@ def replace_icons(actions_json):
 
     return actions_json
 
+
+def replace_dynamic_values(dynamic_value):
+    dynamic_function_method = getattr(functions, dynamic_value)
+    function_result = dynamic_function_method()
+    return function_result
