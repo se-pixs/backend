@@ -13,7 +13,7 @@
         "value": {
           "type": "integer",
           "range": [1, 2160],
-          "default": 1080
+          "default": "$dynamic:maxImageWidth"
         }
       },
       {
