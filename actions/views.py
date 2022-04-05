@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 import uuid
 import logging
 import json
-from utils.actionAssembler import assemble_actions, assemble_init_actions
+from utils.actionAssembler import assemble_actions
 from utils.fileSystem import check_image_exists
 
 # add modules to path
@@ -30,12 +30,7 @@ def index(request):
         session_id = uuid.uuid4().hex
         request.session['session_id'] = session_id
 
-    # check if image exists
-    if not check_image_exists(session_id):
-        action_json = assemble_init_actions()
-    else:
-        # send initial action json
-        action_json = assemble_actions(session_id)
+    action_json = assemble_actions(session_id)
 
     if action_json is None:
         # Error while assembling actions; see server logs for more info

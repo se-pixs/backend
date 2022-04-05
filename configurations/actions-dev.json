@@ -2,6 +2,6 @@
   "title": "Actions Dev",
   "description": "Actions that can be performed on dev instance",
   "initActions": ["upload"],
-  "baseActions": ["upload", "download"],
+  "baseActions": ["download"],
   "customActions": ["igPanoSplit"]
 }

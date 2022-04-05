@@ -126,6 +126,7 @@ def read_image_to_http_response(image_path):
         return HttpResponse(image.read(), content_type=content_type)
 
 
+# TODO error handling
 def get_from_image_root(session_id):
     images = []
     if check_image_destination(session_id):

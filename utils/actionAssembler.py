@@ -1,29 +1,10 @@
 from django.conf import settings
 from utils.miscellaneous import open_json
+from utils.fileSystem import check_image_exists
 import os
 
 # import all dynamic parameters
 import dynamic_functions as functions
-
-
-# TODO add exception handling
-def assemble_init_actions():
-    action_logger = settings.ACTION_ASSEMBLER_LOGGER
-    try:
-        actions_json = open_json(settings.ACTIONS_PATH)
-        actions_json['actions'] = []
-
-        for action in actions_json['initActions']:
-            init_action_path = os.path.join(settings.INIT_ACTIONS_PATH, action + '.json')
-            init_action_json = open_json(init_action_path)
-            actions_json['actions'].append(init_action_json)
-
-        clean_action_json(actions_json)
-
-        return actions_json
-    except IOError:
-        action_logger.error('Could not open actions file with path: ' + settings.ACTIONS_PATH)
-        return None
 
 
 # TODO add exception handling
@@ -33,11 +14,23 @@ def assemble_actions(session_id):
         actions_json = open_json(settings.ACTIONS_PATH)
         actions_json['actions'] = []
 
+        action_availability = True
+        # insert all init actions
+        for action in actions_json['initActions']:
+            init_action = os.path.join(settings.BASE_ACTIONS_PATH, action + '.json')
+            init_action_json = open_json(init_action)
+            add_action_json_to_actions(actions_json=actions_json, action_json=init_action_json,
+                                       available=action_availability)
+
+        if not check_image_exists(session_id=session_id):
+            action_availability = False
+
         # insert all base actions
         for action in actions_json['baseActions']:
             base_action_path = os.path.join(settings.BASE_ACTIONS_PATH, action + '.json')
             base_action_json = open_json(base_action_path)
-            actions_json['actions'].append(base_action_json)
+            add_action_json_to_actions(actions_json=actions_json, action_json=base_action_json,
+                                       available=action_availability)
 
         # insert all custom actions into actions
         for action in actions_json['customActions']:
@@ -45,17 +38,22 @@ def assemble_actions(session_id):
             if inserted_custom_action is None:
                 action_logger.error('Could not insert custom action with name: ' + action)
                 return None
-            actions_json['actions'].append(inserted_custom_action)
+            add_action_json_to_actions(actions_json=actions_json, action_json=inserted_custom_action,
+                                       available=action_availability)
 
         # clean actions json from custom, base and init actions
         clean_action_json(actions_json)
-
         actions_json = replace_icons(actions_json)
 
         return actions_json
     except IOError:
         action_logger.error('Could not open actions file with path: ' + settings.ACTIONS_PATH)
         return None
+
+
+def add_action_json_to_actions(actions_json, action_json, available):
+    action_json['available'] = available
+    actions_json['actions'].append(action_json)
 
 
 def clean_action_json(actions_json):
@@ -172,6 +170,8 @@ def replace_icons(actions_json):
 
 
 def replace_dynamic_values(dynamic_value, session_id):
+    if not check_image_exists(session_id):
+        return "N/A"
     dynamic_function_method = getattr(functions, dynamic_value)
     function_result = dynamic_function_method(session_id)
     return function_result
