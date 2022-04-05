@@ -150,9 +150,7 @@ def replace_recursive(custom_input, input_json, session_id):
                     return None
 
             # check if replacement value is a dynamic value
-            if type(replacement_value) is str:
-                if replacement_value.startswith('$dynamic:'):
-                    replacement_value = replace_dynamic_values(replacement_value.split(':')[-1], session_id)
+            replacement_value = replace_dynamic_values(replacement_value, session_id)
             input_json[key] = replacement_value
 
     return input_json
@@ -169,7 +167,20 @@ def replace_icons(actions_json):
     return actions_json
 
 
-def replace_dynamic_values(dynamic_value, session_id):
+def replace_dynamic_values(value, session_id):
+    if type(value) is str:
+        if value.startswith('$dynamic:'):
+            value = evaluate_dynamic_values(value.split(':')[-1], session_id)
+    elif type(value) is list:
+        for index, item in enumerate(value):
+            if type(item) is str:
+                if item.startswith('$dynamic:'):
+                    value[index] = evaluate_dynamic_values(item.split(':')[-1], session_id)
+
+    return value
+
+
+def evaluate_dynamic_values(dynamic_value, session_id):
     if not check_image_exists(session_id):
         return "N/A"
     dynamic_function_method = getattr(functions, dynamic_value)
