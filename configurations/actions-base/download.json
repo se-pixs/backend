@@ -1,0 +1,14 @@
+{
+  "name": "download",
+  "description": "Download a file",
+  "helpMessage": "",
+  "icon": "",
+  "path": "/download",
+  "format": {
+    "type": "string",
+    "enum": [
+      "JPEG",
+      "PNG"
+    ]
+  }
+}

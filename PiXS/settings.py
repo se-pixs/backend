@@ -45,6 +45,9 @@ POSSIBLE_INPUTS_PATH = None
 IMAGES_ROOT_PATH = None
 ICONS_PATH = None
 
+# Application classes
+ACTION_ASSEMBLER_LOGGER = None
+
 # Application definition
 
 INSTALLED_APPS = [

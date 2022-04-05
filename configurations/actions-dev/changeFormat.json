@@ -1,5 +1,6 @@
 {
-  "name": "change Format",
+  "name": "changeFormat",
+  "displayName": "change Format",
   "description": "changes the format of the image to the provided format",
   "helpMessage": "",
   "icon": "testIcon.svg",
@@ -12,7 +13,7 @@
         "value": {
           "type": "dropdown",
           "range": ["JPEG", "PNG"],
-          "default": 0
+          "default": "JPEG"
         }
       }
     ],
@@ -20,7 +21,17 @@
       {
         "name": "fillcolor",
         "description": "the color to change background to",
-        "default": "#FFFFFF"
+        "value": {
+          "red": {
+            "default": 255
+          },
+          "green": {
+            "default": 255
+          },
+          "blue": {
+            "default": 255
+          }
+        }
       }
     ],
     "sliders": [
@@ -31,7 +42,7 @@
           "min": 0,
           "max": 100,
           "step": 1,
-          "default": 50
+          "default": 25
         }
       }
     ]

@@ -1,7 +1,7 @@
 {
   "name": "colorpicker",
   "description": "Color picker",
-  "input": {
+  "value": {
     "red": {
       "description": "The red value of the colorpicker",
       "type": "number",
@@ -11,14 +11,12 @@
     },
     "green": {
       "description": "The green value of the colorpicker",
-      "type": "number",
       "minimum": 0,
       "maximum": 255,
       "default": 136
     },
     "blue": {
       "description": "The blue value of the colorpicker",
-      "type": "number",
       "minimum": 0,
       "maximum": 255,
       "default": 136
