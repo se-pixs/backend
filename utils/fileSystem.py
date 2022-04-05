@@ -128,16 +128,15 @@ def read_image_to_http_response(image_path):
 
 def get_from_image_root(session_id):
     images = []
-    if validate_request_session(session_id):
-        if check_image_destination(session_id):
-            image_path = os.path.join(settings.IMAGES_ROOT, session_id)
-            files = [name for name in os.listdir(image_path) if
-                     os.path.isfile(os.path.join(image_path, name))]
-            file_count = len(files)
-            if file_count > 0:
-                for f in files:
-                    images.append(os.path.join(image_path, f))
-            else:
-                pass
+    if check_image_destination(session_id):
+        image_path = os.path.join(settings.IMAGES_ROOT, session_id)
+        files = [name for name in os.listdir(image_path) if
+                 os.path.isfile(os.path.join(image_path, name))]
+        file_count = len(files)
+        if file_count > 0:
+            for f in files:
+                images.append(os.path.join(image_path, f))
+        else:
+            pass
 
     return images

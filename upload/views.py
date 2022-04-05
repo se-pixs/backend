@@ -18,7 +18,7 @@ def index(request):
         request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
         session_id = request.session['session_id']
         if request.method == 'POST':
-            if handle_uploaded_file(request.FILES['file'], request.POST.get('format'), session_id):
+            if handle_uploaded_file(request.FILES['image'], request.POST.get('format'), session_id):
                 return HttpResponseRedirect('/')
             else:
                 return HttpResponseServerError('Format not supported')  # TODO add error page
@@ -35,12 +35,12 @@ def handle_uploaded_file(f, format, session_id):
 
     # open upload config
     try:
-        upload_json = open_json(settings.ACTIONS_PATH)
+        upload_json = open_json(os.path.join(settings.BASE_ACTIONS_PATH, 'upload.json'))
     except IOError:
         logging.error("Could not open upload config")
         return False
 
-    if format in upload_json['actions'][0]['format']['enum']:
+    if format in upload_json['format']['enum']:
         save_image(f, format.lower(), session_id)
         return True
     else:

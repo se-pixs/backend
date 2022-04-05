@@ -1,7 +1,6 @@
 from django.conf import settings
 import os
 import logging
-from utils.actionAssembler import assemble_actions
 
 
 def configure_server_settings(mode, server_settings):

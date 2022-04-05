@@ -35,7 +35,7 @@ def index(request):
         action_json = assemble_init_actions()
     else:
         # send initial action json
-        action_json = assemble_actions()
+        action_json = assemble_actions(session_id)
 
     if action_json is None:
         # Error while assembling actions; see server logs for more info

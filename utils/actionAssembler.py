@@ -1,5 +1,4 @@
 from django.conf import settings
-import json
 from utils.miscellaneous import open_json
 import os
 
@@ -28,7 +27,7 @@ def assemble_init_actions():
 
 
 # TODO add exception handling
-def assemble_actions():
+def assemble_actions(session_id):
     action_logger = settings.ACTION_ASSEMBLER_LOGGER
     try:
         actions_json = open_json(settings.ACTIONS_PATH)
@@ -42,7 +41,7 @@ def assemble_actions():
 
         # insert all custom actions into actions
         for action in actions_json['customActions']:
-            inserted_custom_action = insert_action(action)
+            inserted_custom_action = insert_action(action, session_id=session_id)
             if inserted_custom_action is None:
                 action_logger.error('Could not insert custom action with name: ' + action)
                 return None
@@ -69,7 +68,7 @@ def clean_action_json(actions_json):
         del actions_json['initActions']
 
 
-def insert_action(custom_action_name, actions_path=settings.CUSTOM_ACTIONS_PATH):
+def insert_action(custom_action_name, session_id, actions_path=settings.CUSTOM_ACTIONS_PATH):
     action_logger = settings.ACTION_ASSEMBLER_LOGGER
     # check if custom action exists
     try:
@@ -77,7 +76,7 @@ def insert_action(custom_action_name, actions_path=settings.CUSTOM_ACTIONS_PATH)
         custom_action_json = open_json(custom_action_path)
 
         # replace parameters in custom action with input json
-        inserted_inputs = insert_inputs(custom_action_json)
+        inserted_inputs = insert_inputs(custom_action_json, session_id)
         if inserted_inputs is None:
             action_logger.error('Could not insert inputs for custom action with name: ' + custom_action_name)
             return None
@@ -89,7 +88,7 @@ def insert_action(custom_action_name, actions_path=settings.CUSTOM_ACTIONS_PATH)
         return None
 
 
-def insert_inputs(custom_action_json):
+def insert_inputs(custom_action_json, session_id):
     action_logger = settings.ACTION_ASSEMBLER_LOGGER
     # create result json
     result_json = {'parameters': {}}
@@ -105,7 +104,7 @@ def insert_inputs(custom_action_json):
         result_json['parameters'].update({action_input: []})
         if action_input in custom_action_json['parameters']:
             for custom_input in custom_action_json['parameters'][action_input]:
-                replaced_input = replace_input(custom_input, action_input)
+                replaced_input = replace_input(custom_input, action_input, session_id)
                 if replace_input is None:
                     action_logger.error('Could not replace input from type {}'.format(action_input))
                     return None
@@ -114,7 +113,7 @@ def insert_inputs(custom_action_json):
     return result_json
 
 
-def replace_input(custom_input, action_input):
+def replace_input(custom_input, action_input, session_id):
     action_logger = settings.ACTION_ASSEMBLER_LOGGER
     try:
         # validation input file
@@ -129,7 +128,7 @@ def replace_input(custom_input, action_input):
     result_json.update({'description': custom_input['description']})
 
     # recursively replace parameters in validation input with custom input
-    replace_parameters = replace_recursive(custom_input['value'], input_json['value'])
+    replace_parameters = replace_recursive(custom_input['value'], input_json['value'], session_id)
     if replace_parameters is None:
         action_logger.error('Could not replace parameters in validation input file with path: ' + input_path)
         return None
@@ -137,13 +136,13 @@ def replace_input(custom_input, action_input):
     return result_json
 
 
-def replace_recursive(custom_input, input_json):
+def replace_recursive(custom_input, input_json, session_id):
     action_logger = settings.ACTION_ASSEMBLER_LOGGER
     if type(custom_input) is not dict:
         return custom_input
     for key, value in input_json.items():
         if key in custom_input:
-            replacement_value = replace_recursive(custom_input[key], value)
+            replacement_value = replace_recursive(custom_input[key], value, session_id)
             if replacement_value is None:
                 return None
             if type(input_json[key]) is list and type(custom_input[key]) is not list:
@@ -153,8 +152,9 @@ def replace_recursive(custom_input, input_json):
                     return None
 
             # check if replacement value is a dynamic value
-            if replacement_value.startswith['$dynamic:']:
-                replacement_value = replace_dynamic_values(replacement_value.split(':')[-1])
+            if type(replacement_value) is str:
+                if replacement_value.startswith('$dynamic:'):
+                    replacement_value = replace_dynamic_values(replacement_value.split(':')[-1], session_id)
             input_json[key] = replacement_value
 
     return input_json
@@ -171,7 +171,7 @@ def replace_icons(actions_json):
     return actions_json
 
 
-def replace_dynamic_values(dynamic_value):
+def replace_dynamic_values(dynamic_value, session_id):
     dynamic_function_method = getattr(functions, dynamic_value)
-    function_result = dynamic_function_method()
+    function_result = dynamic_function_method(session_id)
     return function_result
