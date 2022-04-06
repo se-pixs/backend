@@ -1,7 +1,8 @@
-from utils.miscellaneous import build_image_root_by_id
+# default imports for loading and saving images
 from utils.fileSystem import get_from_image_root, save_pillow_images
+
+# action specific imports
 from PIL import Image
-import os
 
 
 def changeFormat(parameters, session_id):
@@ -10,7 +11,6 @@ def changeFormat(parameters, session_id):
     :param parameters: already parsed and checked parameters
     :param session_id: already validated session id of the user
     """
-    image_path = build_image_root_by_id(session_id)
     images = get_from_image_root(session_id)
 
     # read parameters
@@ -21,8 +21,7 @@ def changeFormat(parameters, session_id):
 
     new_images = []
     for file in images:
-        image = Image.open(os.path.join(image_path, file))
-        new_image_name = file.split('.')[0] + '.' + convert_format
+        image = Image.open(file)
 
         if convert_format == 'JPEG':
             image = image.convert("RGBA")

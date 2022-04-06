@@ -1,9 +1,11 @@
-from utils.miscellaneous import build_image_root_by_id
-from utils.fileSystem import get_from_image_root, orderly_clear_images
+# default imports for loading and saving images
+from utils.fileSystem import get_from_image_root, save_pillow_images
+
+# action specific imports
 import triangler
 from skimage.io import imread
-import matplotlib.pyplot as plt
-import os
+from PIL import Image
+import numpy as np
 
 
 def convertToLowPoly(parameters, session_id):
@@ -12,8 +14,8 @@ def convertToLowPoly(parameters, session_id):
        :param parameters: already parsed and checked parameters
        :param session_id: already validated session id of the user
     """
-    image_path = build_image_root_by_id(session_id)
     images = get_from_image_root(session_id)
+    image_format = images[0].split('.')[-1]
 
     # read parameters
     polygons = parameters['polygons']
@@ -22,11 +24,14 @@ def convertToLowPoly(parameters, session_id):
     for file in images:
         t = triangler.Triangler(
             sample_method=triangler.SampleMethod.THRESHOLD, points=250)
-        img = imread(os.path.join(image_path, file))
+        img = imread(file)
         img_tri = t.convert(img)
         new_images.append(img_tri)
 
-    orderly_clear_images(session_id)
-    for img in new_images:
-        plt.imsave(os.path.join(image_path, file), new_images)
+    # convert ndarrays first to expected format of pillow
+    # then to pillow Image format
+    # finally save the images
+    save_pillow_images([Image.fromarray((image * 255).astype(np.uint8)) for image in new_images],
+                       image_format, session_id)
 
+    return 0

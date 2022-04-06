@@ -71,7 +71,7 @@ def validateParameter(parameters, action_name, possible_inputs):
             # step value check
             if 'step' in validate_value:
                 if 'min' in validate_value:
-                    if validate_value['min'] + value % validate_value['step'] != 0:
+                    if (validate_value['min'] + value) % validate_value['step'] != 0:
                         raise ValueError('Value ' + str(value) + ' is not a multiple of ' + name + '.')
                 else:
                     if value % validate_value['step'] != 0:

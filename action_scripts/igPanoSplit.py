@@ -1,17 +1,19 @@
-from utils.miscellaneous import build_image_root_by_id
-from utils.fileSystem import get_from_image_root, save_images
+# default imports for loading and saving images
+from utils.fileSystem import get_from_image_root, save_pillow_images
+
+# action specific imports
 from PIL import Image
-import os
 
 
+# TODO error handling
+# TODO improve behaviour
 def igPanoSplit(parameters, session_id):
-    # TODO error handling
     """
     :param parameters: already parsed and checked parameters
     :param session_id: already validated session id of the user
     """
-    image_path = build_image_root_by_id(session_id)
     images = get_from_image_root(session_id)
+    image_format = images[0].split('.')[-1]
 
     # read parameters
     max_width = parameters['max_width']
@@ -19,8 +21,7 @@ def igPanoSplit(parameters, session_id):
 
     new_images = []
     for file in images:
-        image = Image.open(os.path.join(image_path, file))
-        format = image.format
+        image = Image.open(file)
         width, height = image.size
         if height > max_height:
             # crop image to max_height
@@ -33,4 +34,4 @@ def igPanoSplit(parameters, session_id):
                 temp_image = image.crop((int(i * max_width), 0, int((i + 1) * max_width), height))
                 new_images.append(temp_image)
 
-    save_images(new_images, new_images[-1].format, session_id)
+    save_pillow_images(new_images, image_format, session_id)
