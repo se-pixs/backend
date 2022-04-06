@@ -34,7 +34,8 @@ def assemble_actions(session_id):
 
         # insert all custom actions into actions
         for action in actions_json['customActions']:
-            inserted_custom_action = insert_action(action, session_id=session_id)
+            inserted_custom_action = insert_action(action, session_id=session_id,
+                                                   actions_path=settings.CUSTOM_ACTIONS_PATH)
             if inserted_custom_action is None:
                 action_logger.error('Could not insert custom action with name: ' + action)
                 return None
@@ -66,7 +67,7 @@ def clean_action_json(actions_json):
         del actions_json['initActions']
 
 
-def insert_action(custom_action_name, session_id, actions_path=settings.CUSTOM_ACTIONS_PATH):
+def insert_action(custom_action_name, session_id, actions_path):
     action_logger = settings.ACTION_ASSEMBLER_LOGGER
     # check if custom action exists
     try:

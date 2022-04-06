@@ -1,5 +1,5 @@
 from utils.miscellaneous import build_image_root_by_id
-from utils.fileSystem import get_from_image_root, save_images
+from utils.fileSystem import get_from_image_root, save_pillow_images
 from PIL import Image
 import os
 
@@ -32,6 +32,7 @@ def changeFormat(parameters, session_id):
                 image = im_background
             new_images.append(image.convert("RGB"))
         elif convert_format == 'PNG':
-            new_image_name.append(image.convert("RGBA"))
+            new_images.append(image.convert("RGBA"))
 
-    save_images(new_images, convert_format, session_id)
+    save_pillow_images(new_images, convert_format, session_id)
+    return 0

@@ -26,24 +26,12 @@ SECRET_KEY = 'ud)mmdi)*o5_ecilzcd(j3kddzr-hqbgv*2xzv1m+%68uy$60w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-SESSION_COOKIE_HTTPONLY = False
-
-ALLOWED_HOSTS = []
-
 IMAGES_ROOT = os.path.join(BASE_DIR, 'images')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 # custom variables set by config
 CONFIG_FILE_PATH = os.path.join('configurations', 'server-config.json')
-CONFIG_PATH: None
-SESSION_EXPIRATION_TIME = None
-ACTIONS_PATH = None
-CUSTOM_ACTIONS_PATH = None
-INPUTS_PATH = None
-POSSIBLE_INPUTS_PATH = None
-IMAGES_ROOT_PATH = None
-ICONS_PATH = None
 
 # Application classes
 ACTION_ASSEMBLER_LOGGER = None
@@ -51,7 +39,6 @@ ACTION_ASSEMBLER_LOGGER = None
 # Application definition
 
 INSTALLED_APPS = [
-    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -61,22 +48,17 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'PiXS.middleware.cors_middleware.CorsMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_ALLOW_ALL = False
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-]
-
+SESSION_COOKIE_HTTPONLY = False
 ROOT_URLCONF = 'PiXS.urls'
 
 TEMPLATES = [

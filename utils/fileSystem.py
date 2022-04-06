@@ -1,10 +1,12 @@
 from django.conf import settings
-from django.http import HttpResponse, FileResponse
+from django.http import HttpResponse, FileResponse, HttpResponseNotFound, HttpResponseServerError
 from zipfile import ZipFile
 from utils.miscellaneous import validate_request_session
 import os
 import mimetypes
 import shutil
+
+from PIL import Image
 
 
 def create_image_dir(session_id):
@@ -52,7 +54,18 @@ def save_file(file, name, session_id):
             destination.write(chunk)
 
 
+def save_pillow_image(image, name, session_id):
+    """
+    Save pillow image to disk
+    """
+    create_image_dir(session_id)
+    image.save(os.path.join(settings.IMAGES_ROOT, session_id, name))
+
+
 def save_image(image, image_format, session_id):
+    """
+    Save uploaded image to disk
+    """
     orderly_clear_images(session_id)
     save_file(image, 'upload.' + image_format.lower(), session_id)
 
@@ -61,6 +74,12 @@ def save_images(images, image_format, session_id):
     orderly_clear_images(session_id)
     for index, image in enumerate(images):
         save_file(image, 'upload{}.'.format(index + 1) + image_format.lower(), session_id)
+
+
+def save_pillow_images(images, image_format, session_id):
+    orderly_clear_images(session_id)
+    for index, image in enumerate(images):
+        save_pillow_image(image, 'upload{}.'.format(index + 1) + image_format.lower(), session_id)
 
 
 def check_image_destination(session_id):
@@ -88,7 +107,7 @@ def check_image_exists(session_id):
 
 def extract_image_dir(session_id):
     """
-    Extract image directory
+    Extract image directory to HTTP response
     """
     image_path = os.path.join(settings.IMAGES_ROOT, session_id)
     if check_image_destination(session_id):
@@ -102,9 +121,11 @@ def extract_image_dir(session_id):
             else:
                 # return as image
                 image_path = os.path.join(image_path, files[0])
-                read_image_to_http_response(image_path)
+                return read_image_to_http_response(image_path)
         else:
-            pass
+            return HttpResponseNotFound("No images found")
+    else:
+        return HttpResponseServerError("Image directory does not exist")
 
 
 def extract_files_to_zip(path, files):

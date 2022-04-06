@@ -29,10 +29,14 @@ def execute(request, action_name):
             except json.JSONDecodeError:
                 return HttpResponseServerError("Parameters not valid json")
 
-            parseParameters(parameters)
+            parsed_parameters = parseParameters(parameters)
             action_script_method = getattr(actions, action_name)
-            action_result = action_script_method()
-            # TODO http response
+            action_result = action_script_method(parameters=parsed_parameters, session_id=session_id)
+            # TODO write result class
+            if action_result == 0:
+                return HttpResponseRedirect('/')
+            else:
+                return HttpResponseServerError("Action failed")
         else:
             form = GeneralForm()
             return render(request, 'form.html', {'form': form})
