@@ -23,7 +23,7 @@ def convertToLowPoly(parameters, session_id):
     new_images = []
     for file in images:
         t = triangler.Triangler(
-            sample_method=triangler.SampleMethod.THRESHOLD, points=250)
+            sample_method=triangler.SampleMethod.THRESHOLD, points=polygons)
         img = imread(file)
         img_tri = t.convert(img)
         new_images.append(img_tri)
