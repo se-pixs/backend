@@ -1,4 +1,5 @@
 
+
 def _import_all_modules():
     """ Dynamically imports all modules in this package. """
     import traceback
@@ -27,3 +28,8 @@ def _import_all_modules():
 
 
 _import_all_modules()
+
+# set dynamic function specific constants
+DYNAMIC_START_SEQUENCE = '$dynamic'
+DYNAMIC_TERMINAL_INDICATOR = '$'
+DYNAMIC_SEPARATOR = ':'

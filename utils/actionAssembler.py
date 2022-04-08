@@ -1,10 +1,13 @@
 from django.conf import settings
 from utils.miscellaneous import open_json
 from utils.fileSystem import check_image_exists
+from copy import deepcopy
 import os
 
 # import all dynamic parameters
 import dynamic_functions as functions
+
+from inspect import signature
 
 
 # TODO add exception handling
@@ -170,20 +173,68 @@ def replace_icons(actions_json):
 
 def replace_dynamic_values(value, session_id):
     if type(value) is str:
-        if value.startswith('$dynamic:'):
-            value = evaluate_dynamic_values(value.split(':')[-1], session_id)
+        if value.startswith(functions.DYNAMIC_START_SEQUENCE):
+            value = evaluate_dynamic_values(value.split(':')[1:], session_id)
     elif type(value) is list:
-        for index, item in enumerate(value):
-            if type(item) is str:
-                if item.startswith('$dynamic:'):
-                    value[index] = evaluate_dynamic_values(item.split(':')[-1], session_id)
+        result_list = deepcopy(value)
+        for index, value in enumerate(value):
+            if type(value) is str:
+                if value.startswith(functions.DYNAMIC_START_SEQUENCE):
+                    values = value.split(':')[1:]
+                    result_list = evaluate_dynamic_values(values, session_id)
+        return result_list
 
+    # default return if value is not a dynamic value
     return value
 
 
-def evaluate_dynamic_values(dynamic_value, session_id):
+def evaluate_dynamic_values(values, session_id):
     if not check_image_exists(session_id):
         return "N/A"
-    dynamic_function_method = getattr(functions, dynamic_value)
-    function_result = dynamic_function_method(session_id)
+
+    if values[0] == "m":
+        print(values[0])
+    visited_arguments, function_result = follow_tree(value=getattr(functions, values[0]), values=values[1:], session_id=session_id)
+    if not visited_arguments == len(values) - 1:
+        raise ValueError('Could not evaluate all arguments in dynamic value')
     return function_result
+
+
+def follow_tree(value, values, session_id) -> (int, list):
+    # -1 because every function has at least one argument (the session_id)
+    number_of_arguments = len(signature(value).parameters) - 1  # except session_id
+    if number_of_arguments == 0:
+        return 0, make_call(value, session_id)
+    if check_for_terminal(number_of_arguments, values):
+        stripped_values = strip_terminal_values(number_of_arguments, values)
+        return len(stripped_values), make_call(value, session_id, stripped_values)
+
+    arguments = []
+    visited_arguments = 0
+    while visited_arguments < len(values):
+        new_visited_args, new_arguments = follow_tree(value=getattr(functions, values[visited_arguments]),
+                                                      values=values[visited_arguments + 1:],
+                                                      session_id=session_id)
+        arguments.append(new_arguments)
+        visited_arguments += new_visited_args + 1
+
+    return visited_arguments, make_call(value, session_id, arguments)
+
+
+def check_for_terminal(number_of_arguments, values) -> bool:
+    for number_of_arguments in range(number_of_arguments):
+        if not (values[number_of_arguments].startswith(functions.DYNAMIC_TERMINAL_INDICATOR) and \
+                values[number_of_arguments].endswith(functions.DYNAMIC_TERMINAL_INDICATOR)):
+            return False
+    return True
+
+
+def strip_terminal_values(number_of_arguments, values):
+    stripped_values = []
+    for value in values[:number_of_arguments]:
+        stripped_values.append(value[1:-1])
+    return stripped_values
+
+
+def make_call(method, session_id, arguments=[]):
+    return method(session_id, *arguments)
