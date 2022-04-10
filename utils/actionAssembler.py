@@ -174,13 +174,13 @@ def replace_icons(actions_json):
 def replace_dynamic_values(value, session_id):
     if type(value) is str:
         if value.startswith(functions.DYNAMIC_START_SEQUENCE):
-            value = evaluate_dynamic_values(value.split(':')[1:], session_id)
+            value = evaluate_dynamic_values(value.split(functions.DYNAMIC_SEPARATOR)[1:], session_id)
     elif type(value) is list:
         result_list = deepcopy(value)
         for index, value in enumerate(value):
             if type(value) is str:
                 if value.startswith(functions.DYNAMIC_START_SEQUENCE):
-                    values = value.split(':')[1:]
+                    values = value.split(functions.DYNAMIC_SEPARATOR)[1:]
                     result_list = evaluate_dynamic_values(values, session_id)
         return result_list
 
