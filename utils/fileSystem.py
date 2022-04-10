@@ -24,6 +24,13 @@ def create_image_reverse_dir(session_id):
     try:
         if not os.path.exists(os.path.join(settings.IMAGES_ROOT, session_id, 'reverse')):
             os.makedirs(os.path.join(settings.IMAGES_ROOT, session_id, 'reverse'))
+            for index in range(settings.MAX_REVERSE_STACK_SIZE):
+                try:
+                    os.makedirs(os.path.join(settings.IMAGES_ROOT, session_id, 'reverse', 'state_' + str(index)))
+                except OSError:
+                    print("Error creating image reverse directory with path: " + os.path.join(settings.IMAGES_ROOT,
+                                                                                              session_id, 'reverse',
+                                                                                              'state_' + str(index)))
     except OSError:
         print("Error creating reverse image directory with path: " + os.path.join(settings.IMAGES_ROOT, session_id,
                                                                                   'reverse'))
@@ -33,15 +40,24 @@ def orderly_clear_images(session_id):
     """
     Clear images from current state to reverse dir
     """
-    if os.path.exists(os.path.join(settings.IMAGES_ROOT, session_id, 'reverse')):
-        # clear reverse dir if it is not empty
-        shutil.rmtree(os.path.join(settings.IMAGES_ROOT, session_id, 'reverse'))
+    reverse_folder_path = os.path.join(settings.IMAGES_ROOT, session_id, 'reverse')
+    if os.path.exists(reverse_folder_path):
+        dirs = [name for name in os.listdir(reverse_folder_path) if
+                os.path.isdir(os.path.join(reverse_folder_path, name))]
+        number_of_directories = settings.MAX_REVERSE_STACK_SIZE - 1
+        for index in reversed(range(number_of_directories)):
+            print(index)
+            shutil.rmtree(os.path.join(reverse_folder_path, dirs[index + 1]))
+            shutil.copytree(os.path.join(reverse_folder_path, dirs[index]),
+                            os.path.join(reverse_folder_path, dirs[index + 1]))
 
-    create_image_reverse_dir(session_id)
+    else:
+        create_image_reverse_dir(session_id)
+
     image_root_path = os.path.join(settings.IMAGES_ROOT, session_id)
     for f in os.listdir(os.path.join(image_root_path)):
         if os.path.isfile(os.path.join(image_root_path, f)):
-            shutil.move(os.path.join(image_root_path, f), os.path.join(settings.IMAGES_ROOT, session_id, 'reverse', f))
+            shutil.move(os.path.join(image_root_path, f), os.path.join(reverse_folder_path, "state_0", f))
 
 
 def save_file(file, name, session_id):
@@ -162,3 +178,19 @@ def get_from_image_root(session_id):
             pass
 
     return images
+
+
+def restore_previous_state(session_id):
+    """
+    Restore previous state of images
+    """
+    image_path = os.path.join(settings.IMAGES_ROOT, session_id)
+    if check_image_destination(session_id):
+        files = [name for name in os.listdir(image_path) if
+                 os.path.isfile(os.path.join(image_path, name))]
+        file_count = len(files)
+        if file_count > 0:
+            for f in files:
+                os.remove(os.path.join(image_path, f))
+        else:
+            pass

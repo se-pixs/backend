@@ -20,6 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('upload/', include('upload.urls')),
     path('download/', include('download.urls')),
+    path('reverse/', include('reverse.urls')),
     path('execute/', include('execution.urls')),
     path('servestatic/', include('servestatic.urls')),
     path('', include('actions.urls')),
