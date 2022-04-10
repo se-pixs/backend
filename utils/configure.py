@@ -8,7 +8,7 @@ def configure_server_settings(mode, server_settings):
     Configure server settings.
     Note: To enforce failure on mal-configured settings, we do assignments in a static way
     """
-    #TODO proper logging to file
+    # TODO proper logging to file
     setup_logger = logging.getLogger('server_settings')
 
     if mode == 'development' or 'dev':
@@ -26,6 +26,8 @@ def configure_server_settings(mode, server_settings):
         settings.INPUTS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['INPUTS'])
         settings.POSSIBLE_INPUTS_PATH = os.path.join(settings.INPUTS_PATH, server_setting['POSSIBLE_INPUTS'])
         settings.IMAGES_ROOT_PATH = os.path.join(settings.CONFIG_PATH, server_setting['IMAGES_ROOT'])
+        settings.REVERSE_STACK_PATH = server_setting[
+            'REVERSE_STACK_PATH']  # absolute path is different for every session
         settings.ICONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['ICONS'])
 
         # logging constants
@@ -49,6 +51,8 @@ def configure_server_settings(mode, server_settings):
         settings.INPUTS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['INPUTS'])
         settings.POSSIBLE_INPUTS_PATH = os.path.join(settings.INPUTS_PATH, server_setting['POSSIBLE_INPUTS'])
         settings.IMAGES_ROOT_PATH = os.path.join(settings.CONFIG_PATH, server_setting['IMAGES_ROOT'])
+        settings.REVERSE_STACK_PATH = server_setting[
+            'REVERSE_STACK_PATH']  # absolute path is different for every session
         settings.ICONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['ICONS'])
 
         # logging constants

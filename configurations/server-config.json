@@ -11,6 +11,7 @@
     "INPUTS": "inputs",
     "POSSIBLE_INPUTS": "possibleInputs.json",
     "IMAGES_ROOT": "images",
+    "REVERSE_STACK_PATH": "reverse",
     "ICONS": "icons",
     "LOGGING_PATH": "logs",
     "ACTION_ASSEMBLER_LOG_PATH": "actionAssemblerLogs"
@@ -26,6 +27,9 @@
     "INPUTS": "inputs",
     "POSSIBLE_INPUTS": "possibleInputs.json",
     "IMAGES_ROOT": "images",
-    "ICONS": "icons"
+    "REVERSE_STACK_PATH": "reverse",
+    "ICONS": "icons",
+    "LOGGING_PATH": "logs",
+    "ACTION_ASSEMBLER_LOG_PATH": "actionAssemblerLogs"
   }
 }
