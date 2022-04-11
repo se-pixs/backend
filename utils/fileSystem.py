@@ -1,12 +1,9 @@
 from django.conf import settings
 from django.http import HttpResponse, FileResponse, HttpResponseNotFound, HttpResponseServerError
 from zipfile import ZipFile
-from utils.miscellaneous import validate_request_session
 import os
 import mimetypes
 import shutil
-
-from PIL import Image
 
 
 def create_image_dir(session_id):

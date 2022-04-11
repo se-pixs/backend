@@ -1,13 +1,12 @@
 import logging
 
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseServerError, HttpResponseRedirect
+from django.http import HttpResponseServerError, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from .forms import UploadFileForm
 from django.conf import settings
 
 import os
-import json
 from utils.fileSystem import *
 from utils.miscellaneous import open_json, validate_request_session
 
@@ -15,7 +14,6 @@ from utils.miscellaneous import open_json, validate_request_session
 @csrf_exempt
 def index(request):
     if validate_request_session(request):
-        request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
         session_id = request.session['session_id']
         if request.method == 'POST':
             if handle_uploaded_file(request.FILES['image'], request.POST.get('format'), session_id):
@@ -25,7 +23,6 @@ def index(request):
         else:
             form = UploadFileForm()
             return render(request, 'form.html', {'form': form})
-            return HttpResponse("Hello from upload get")
     else:
         return HttpResponseServerError('Session not valid')  # TODO appropriate error handling
 

@@ -21,7 +21,6 @@ def index(request):
 @csrf_exempt
 def execute(request, action_name):
     if validate_request_session(request):
-        request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
         session_id = request.session['session_id']
         if request.method == 'POST':
             try:
