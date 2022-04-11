@@ -12,7 +12,7 @@
         "description": "the maximum width of single pictures",
         "value": {
           "type": "integer",
-          "range": [1, "$dynamic:maxImageWidth"],
+          "range": [1, "$dynamic:add:maxImageHeight:integer:$200$"],
           "default": "$dynamic:maxImageWidth"
         }
       },
