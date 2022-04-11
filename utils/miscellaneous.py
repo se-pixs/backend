@@ -1,6 +1,6 @@
 from django.conf import settings
-from django.http import HttpResponse
 import json
+from uuid import UUID, uuid4
 import os
 
 
@@ -19,8 +19,17 @@ def build_image_root_by_id(session_id):
 
 
 def validate_request_session(request):
+    # TODO Keep track of used session ids and check if current session id is valid
     if 'session_id' in request.session:
-        request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
-        return True
+        try:
+            UUID(request.session['session_id'])
+            request.session.set_expiry(settings.SESSION_EXPIRATION_TIME)
+            return True
+        except ValueError:
+            return False
     else:
         return False
+
+def generate_session_id():
+    # make uuid serializable because django bug
+    return uuid4().hex

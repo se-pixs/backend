@@ -1,4 +1,3 @@
-from django.shortcuts import render
 import sys
 import os
 from os.path import normpath, join
@@ -7,11 +6,11 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
 # custom imports
-import uuid
 import logging
 import json
+from utils.miscellaneous import generate_session_id, validate_request_session
 from utils.actionAssembler import assemble_actions
-from utils.fileSystem import check_image_exists
+
 
 # add modules to path
 sys.path.append(normpath(join(os.getcwd(), 'configurations')))
@@ -20,14 +19,13 @@ sys.path.append(normpath(join(os.getcwd(), 'configurations')))
 # Create your views here.
 @csrf_exempt
 def index(request):
-    # check if session id exists # TODO check if session id is a valid one
-    if 'session_id' in request.session:
+    # check if session id exists
+    if validate_request_session(request):
         session_id = request.session['session_id']
     else:
         # set session id
         logging.info('Session ID not found, creating new session ID')
-        # make uuid serializable because django bug
-        session_id = uuid.uuid4().hex
+        session_id = generate_session_id()
         request.session['session_id'] = session_id
 
     action_json = assemble_actions(session_id)
