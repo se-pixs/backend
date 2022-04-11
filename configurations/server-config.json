@@ -2,6 +2,7 @@
   "SERVER_SETUP_LOGGING_PATH": "./logs/",
   "development": {
     "SESSION_EXPIRATION_TIME": 6000,
+    "MAX_REVERSE_STACK_SIZE": 4,
     "CONFIG_PATH": "configurations",
     "ACTIONS": "actions-dev.json",
     "CUSTOM_ACTIONS": "actions-dev",
@@ -10,12 +11,14 @@
     "INPUTS": "inputs",
     "POSSIBLE_INPUTS": "possibleInputs.json",
     "IMAGES_ROOT": "images",
+    "REVERSE_STACK_PATH": "reverse",
     "ICONS": "icons",
     "LOGGING_PATH": "logs",
     "ACTION_ASSEMBLER_LOG_PATH": "actionAssemblerLogs"
   },
   "production": {
     "SESSION_EXPIRATION_TIME": 600,
+    "MAX_REVERSE_STACK_SIZE": 4,
     "CONFIG_PATH": "configurations",
     "ACTIONS": "actions-prod.json",
     "CUSTOM_ACTIONS": "actions-prod",
@@ -24,6 +27,9 @@
     "INPUTS": "inputs",
     "POSSIBLE_INPUTS": "possibleInputs.json",
     "IMAGES_ROOT": "images",
-    "ICONS": "icons"
+    "REVERSE_STACK_PATH": "reverse",
+    "ICONS": "icons",
+    "LOGGING_PATH": "logs",
+    "ACTION_ASSEMBLER_LOG_PATH": "actionAssemblerLogs"
   }
 }
