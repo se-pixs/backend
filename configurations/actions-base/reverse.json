@@ -3,5 +3,5 @@
   "description": "Restores the latest backup.",
   "helpMessage": "",
   "icon": "",
-  "path": "/reverse"
+  "path": "/reverse/"
 }

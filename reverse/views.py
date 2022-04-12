@@ -16,6 +16,8 @@ def index(request):
         if request.method == 'GET':
             restore_previous_state(session_id)
             return HttpResponseRedirect('/')
+        else:
+            return HttpResponseServerError('Method not allowed')
     else:
         logging.warning("No session id found")
         return HttpResponseServerError('Session invalid')
