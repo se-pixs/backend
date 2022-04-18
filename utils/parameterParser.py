@@ -50,6 +50,15 @@ def validateParameter(parameters, action_name, possible_inputs):
     for name, value in parameters.items():
         if name in validate_json:
             validate_value = validate_json[name]
+            # type check
+            if 'type' in validate_value:
+                if validate_value['type'] == 'integer' and not isinstance(value, int):
+                    raise ValueError('Parameter ' + name + ' is not an integer')
+                elif validate_value['type'] == 'float' and not isinstance(value, float):
+                    raise ValueError('Parameter ' + name + ' is not a float')
+                elif validate_value['type'] == 'string' and not isinstance(value, str):
+                    raise ValueError('Parameter ' + name + ' is not a string')
+
             # range check
             if 'range' in validate_value:
                 # type check
