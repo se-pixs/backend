@@ -2,9 +2,10 @@ from django.conf import settings
 import logging
 import os
 from utils.miscellaneous import open_json
+from utils.actionAssembler import replace_dynamic_values
 
 
-def parseParameters(action_parameters):
+def parseParameters(action_parameters, session_id):
     """
     Parses the parameters given in the command line.
     """
@@ -20,7 +21,7 @@ def parseParameters(action_parameters):
     result_params = parseInputsToDict(parameters, possible_inputs_json['inputs'])
 
     # validate parameters
-    validateParameter(result_params, action_parameters['name'], possible_inputs_json["inputs"])
+    validateParameter(result_params, action_parameters['name'], possible_inputs_json["inputs"], session_id)
 
     return result_params
 
@@ -35,7 +36,7 @@ def parseInputsToDict(params, possible_inputs):
     return result_dict
 
 
-def validateParameter(parameters, action_name, possible_inputs):
+def validateParameter(parameters, action_name, possible_inputs, session_id):
     """
     Validates the parameters
     """
@@ -61,29 +62,35 @@ def validateParameter(parameters, action_name, possible_inputs):
 
             # range check
             if 'range' in validate_value:
+                validate_value_range = replace_dynamic_values(validate_value['range'], session_id)
                 # type check
                 if type(value) is str:
-                    if value not in validate_value['range']:
+                    if value not in validate_value_range:
                         raise ValueError('Value ' + value + ' is not in range of ' + name + '.')
                 else:
-                    if value < validate_value['range'][0] or value > validate_value['range'][-1]:
+                    if value < validate_value_range[0] or value > validate_value_range[-1]:
                         raise ValueError('Value ' + str(value) + ' is not in range of ' + name + '.')
 
             else:
+
                 if 'min' in validate_value:
-                    if value < validate_value['min']:
+                    validate_value_min = replace_dynamic_values(validate_value['min'], session_id)
+                    if value < validate_value_min:
                         raise ValueError('Value ' + str(value) + ' is smaller than minimum of ' + name + '.')
                 if 'max' in validate_value:
-                    if value > validate_value['max']:
+                    validate_value_max = replace_dynamic_values(validate_value['max'], session_id)
+                    if value > validate_value_max:
                         raise ValueError('Value ' + str(value) + ' is bigger than maximum of ' + name + '.')
 
             # step value check
             if 'step' in validate_value:
+                validate_value_step = replace_dynamic_values(validate_value['step'], session_id)
                 if 'min' in validate_value:
-                    if (validate_value['min'] + value) % validate_value['step'] != 0:
+                    validate_value_min = replace_dynamic_values(validate_value['min'], session_id)
+                    if (validate_value_min + value) % validate_value_step != 0:
                         raise ValueError('Value ' + str(value) + ' is not a multiple of ' + name + '.')
                 else:
-                    if value % validate_value['step'] != 0:
+                    if value % validate_value_step != 0:
                         raise ValueError('Value ' + str(value) + ' is not a multiple of ' + name + '.')
 
         else:

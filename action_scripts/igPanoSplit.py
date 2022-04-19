@@ -35,3 +35,4 @@ def igPanoSplit(parameters, session_id):
                 new_images.append(temp_image)
 
     save_pillow_images(new_images, image_format, session_id)
+    return 0

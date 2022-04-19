@@ -181,7 +181,7 @@ def replace_dynamic_values(value, session_id):
             if type(value) is str:
                 if value.startswith(functions.DYNAMIC_START_SEQUENCE):
                     values = value.split(functions.DYNAMIC_SEPARATOR)[1:]
-                    result_list = evaluate_dynamic_values(values, session_id)
+                    result_list[index] = evaluate_dynamic_values(values, session_id)
         return result_list
 
     # default return if value is not a dynamic value
