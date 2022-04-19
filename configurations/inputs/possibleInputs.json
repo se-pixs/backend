@@ -3,6 +3,7 @@
   "inputs": [
     "valuefields",
     "sliders",
-    "colorpickers"
+    "colorpickers",
+    "selectionfields"
   ]
 }
