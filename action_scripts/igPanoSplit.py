@@ -1,5 +1,6 @@
 # default imports for loading and saving images
 from utils.fileSystem import get_from_image_root, save_pillow_images
+from utils.executionStatus import ExecutionStatus, Status
 
 # action specific imports
 from PIL import Image
@@ -14,6 +15,7 @@ def igPanoSplit(parameters, session_id):
     """
     images = get_from_image_root(session_id)
     image_format = images[0].split('.')[-1]
+    status = ExecutionStatus()
 
     # read parameters
     max_width = parameters['max_width']
@@ -35,4 +37,6 @@ def igPanoSplit(parameters, session_id):
                 new_images.append(temp_image)
 
     save_pillow_images(new_images, image_format, session_id)
-    return 0
+
+    status.set_status(Status.SUCCESS)
+    return status

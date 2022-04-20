@@ -9,6 +9,7 @@ import action_scripts as actions
 import json
 
 from utils.miscellaneous import validate_request_session
+from utils.executionStatus import Status
 
 
 def index(request):
@@ -34,11 +35,14 @@ def execute(request, action_name):
             parsed_parameters = parseParameters(parameters, session_id=session_id)
             action_script_method = getattr(actions, action_name)
             action_result = action_script_method(parameters=parsed_parameters, session_id=session_id)
-            # TODO write result class
-            if action_result == 0:
+
+            execution_status = action_result.get_status()
+            if execution_status == Status.SUCCESS:
                 return HttpResponseRedirect('/')
+            elif execution_status == Status.WARNING:
+                return HttpResponseRedirect('/', message=action_result.get_message())
             else:
-                return HttpResponseServerError("Action failed")
+                return HttpResponseServerError(message="Action failed with message: %s" % action_result.get_message())
         else:
             form = GeneralForm()
             return render(request, 'form.html', {'form': form})
