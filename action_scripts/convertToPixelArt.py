@@ -1,5 +1,6 @@
 # default imports for loading and saving images
 from skimage.io import imread
+from PIL import Image
 from utils.fileSystem import get_from_image_root, save_pillow_images
 
 # action specific imports
@@ -25,8 +26,9 @@ def convertToPixelArt(parameters, session_id):
         img = imread(file)
         pyx.fit(img)
         img_pixel_art = pyx.transform(img)
-        new_images.append(img_pixel_art)
+        # convert to PIL image
+        new_images.append(Image.fromarray(img_pixel_art))
 
-    save_pillow_images(new_images, image_format, session_id, use_imsave=True)
+    save_pillow_images(new_images, image_format, session_id)
 
     return 0

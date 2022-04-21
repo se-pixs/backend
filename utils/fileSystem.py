@@ -4,7 +4,6 @@ from zipfile import ZipFile
 import os
 import mimetypes
 import shutil
-from skimage.io import imsave
 
 
 def create_image_dir(session_id):
@@ -110,16 +109,11 @@ def save_images(images, image_format, session_id):
                   image_format.lower(), session_id)
 
 
-def save_pillow_images(images, image_format, session_id, use_imsave=False):
+def save_pillow_images(images, image_format, session_id):
     orderly_clear_images(session_id)
     for index, image in enumerate(images):
-        if use_imsave:
-            imsave(os.path.join(settings.IMAGES_ROOT, session_id, 'upload{}.'.format(index + 1) +
-                                image_format.lower()), image)
-            # imsave(file, img_pixel_art)
-        else:
-            save_pillow_image(image, 'upload{}.'.format(
-                index + 1) + image_format.lower(), session_id)
+        save_pillow_image(image, 'upload{}.'.format(
+        index + 1) + image_format.lower(), session_id)
 
 
 def check_image_destination(session_id):
