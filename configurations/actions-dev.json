@@ -3,5 +3,5 @@
   "description": "Actions that can be performed on dev instance",
   "initActions": ["upload"],
   "baseActions": ["download", "reverse"],
-  "customActions": ["igPanoSplit"]
+  "customActions": ["igPanoSplit", "convertToPixelArt"]
 }
