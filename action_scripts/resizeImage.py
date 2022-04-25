@@ -15,7 +15,7 @@ def resizeImage(parameters, session_id):
     images = get_from_image_root(session_id)
 
     # read parameters
-    dimensions = parameters['images']
+    dimensions = parameters['cutout']
     width = dimensions['width']['value']
     height = dimensions['height']['value']
     point_x = dimensions['positionX']['value']

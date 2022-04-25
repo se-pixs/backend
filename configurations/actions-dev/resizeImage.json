@@ -8,7 +8,7 @@
   "parameters": {
     "selectionfields": [
       {
-        "name": "images",
+        "name": "cutout",
         "description": "The dimensions of the image to resize.",
         "value": {
           "positionX": {
