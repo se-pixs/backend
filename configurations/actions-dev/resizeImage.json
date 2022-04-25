@@ -1,0 +1,39 @@
+{
+  "name": "resizeImage",
+  "displayName": "Resize Image",
+  "description": "Resizes an image to a specified width and height.",
+  "helpMessage": "",
+  "icon": "testIcon.svg",
+  "path": "/execute/resizeImage",
+  "parameters": {
+    "selectionfields": [
+      {
+        "name": "images",
+        "description": "The dimensions of the image to resize.",
+        "value": {
+          "positionX": {
+            "type": "integer",
+            "range": [0, "$dynamic:maxImageWidth"],
+            "default": 0
+          },
+          "positionY": {
+            "type": "integer",
+            "range": [0, "$dynamic:maxImageHeight"],
+            "default": 0
+          },
+          "width": {
+            "type": "integer",
+            "range": [1, "$dynamic:maxImageWidth"],
+            "default": "$dynamic:maxImageWidth"
+          },
+          "height": {
+            "type": "integer",
+            "range": [1, "$dynamic:maxImageHeight"],
+            "default": "$dynamic:maxImageHeight"
+          },
+          "areas": {}
+        }
+      }
+    ]
+  }
+}
