@@ -3,7 +3,7 @@
   "displayName": "Resize Image",
   "description": "Resizes an image to a specified width and height.",
   "helpMessage": "",
-  "icon": "testIcon.svg",
+  "icon": "resizeImageIcon.svg",
   "path": "/execute/resizeImage",
   "parameters": {
     "selectionfields": [

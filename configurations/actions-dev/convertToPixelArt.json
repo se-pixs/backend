@@ -3,7 +3,7 @@
   "displayName": "Convert to pixel art",
   "description": "changes the image to a pixel art version",
   "helpMessage": "",
-  "icon": "testIcon.svg",
+  "icon": "pixelArtIcon.svg",
   "path": "/execute/convertToPixelArt",
   "parameters": {
     "sliders": [

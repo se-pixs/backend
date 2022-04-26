@@ -3,7 +3,7 @@
   "displayName": "change Format",
   "description": "changes the format of the image to the provided format",
   "helpMessage": "",
-  "icon": "testIcon.svg",
+  "icon": "changeFormatIcon.svg",
   "path": "/execute/changeFormat",
   "parameters": {
     "valuefields": [
