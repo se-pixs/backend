@@ -4,7 +4,7 @@
   "description": "Creates a swiping panorama from a set of images i.o. to upload them to Instagram.",
   "helpMessage": "",
   "icon": "panoSplitIcon.svg",
-  "path": "/execute/instagramPanoSplit",
+  "path": "/execute/igPanoSplit",
   "parameters": {
     "selectionfields": [
       {
