@@ -1,6 +1,6 @@
 # default imports for loading and saving images
 from utils.fileSystem import get_from_image_root, save_pillow_images
-import logging
+from utils.executionStatus import ExecutionStatus, Status
 
 # action specific imports
 from PIL import Image
@@ -13,23 +13,24 @@ def resizeImage(parameters, session_id):
     :param session_id: already validated session id of the user
     """
     images = get_from_image_root(session_id)
+    status = ExecutionStatus()
 
     # read parameters
     dimensions = parameters['cutout']
-    width = dimensions['width']['value']
-    height = dimensions['height']['value']
-    point_x = dimensions['positionX']['value']
-    point_y = dimensions['positionY']['value']
+    width = dimensions['width']
+    height = dimensions['height']
+    point_x = dimensions['positionX']
+    point_y = dimensions['positionY']
     for file in images:
         image_format = file.split('.')[-1]
         image = Image.open(file)
 
         try:
-            image = image.crop(
-                (point_x, point_y, point_x + width, point_y + height))
-            save_pillow_images([image], image_format, session_id)
+            image = image.crop((point_x, point_y, point_x + width, point_y + height))
         except Exception as e:
-            print("Error: Image could not be resized")
-            logging.critical(e)
-            return -1
-    return 0
+            status.set_status("Error: Image could not be resized")
+            return status
+
+    save_pillow_images([image], image_format, session_id)
+    status.set_status(Status.SUCCESS)
+    return status
