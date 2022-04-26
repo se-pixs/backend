@@ -6,26 +6,6 @@
   "icon": "panoSplitIcon.svg",
   "path": "/execute/instagramPanoSplit",
   "parameters": {
-    "valuefields": [
-      {
-        "name": "max_width",
-        "description": "the maximum width of single pictures",
-        "value": {
-          "type": "integer",
-          "range": [1, "$dynamic:add:maxImageHeight:integer:$200$"],
-          "default": "$dynamic:maxImageWidth"
-        }
-      },
-      {
-        "name": "max_height",
-        "description": "the maximum height of single pictures",
-        "value": {
-          "type": "integer",
-          "range": [1, 2160],
-          "default": 1080
-        }
-      }
-    ],
     "selectionfields": [
       {
         "name": "images",
@@ -33,9 +13,21 @@
         "value": {
           "positionX": {},
           "positionY": {},
-          "width": {},
-          "height": {},
-          "areas": {}
+          "width": {
+            "min": "1",
+            "max": "$dynamic:maxImageWidth",
+            "default": "$dynamic:integer:divide:maxImageWidth:integer:$3$"
+          },
+          "height": {
+            "min": 1,
+            "max": "$dynamic:maxImageHeight",
+            "default": "$dynamic:maxImageHeight"
+          },
+          "areas": {
+            "min": 1,
+            "max": "$dynamic:maxImageWidth",
+            "default": 3
+          }
         }
       }
     ]

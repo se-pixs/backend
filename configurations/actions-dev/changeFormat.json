@@ -33,18 +33,6 @@
           }
         }
       }
-    ],
-    "sliders": [
-      {
-        "name": "brightness",
-        "description": "the brightness to change the image to",
-        "value": {
-          "min": 0,
-          "max": 100,
-          "step": 1,
-          "default": 25
-        }
-      }
     ]
   }
 }
