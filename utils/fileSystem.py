@@ -174,14 +174,16 @@ def extract_files_to_zip(path, files):
 
 
 def read_image_to_http_response(image_path):
-    with open(image_path, 'rb') as image:
-        content_type, encoding = mimetypes.guess_type(image_path)
-        if content_type is None:
-            content_type = "image/" + image_path.split('.')[-1]
-        return HttpResponse(image.read(), content_type=content_type)
+    image = open(image_path, 'rb')
+    content_type, encoding = mimetypes.guess_type(image_path)
+    if content_type is None:
+        content_type = "image/" + image_path.split('.')[-1]
+
+    response = HttpResponse(image.read(), content_type=content_type)
+    image.close()
+    return response
 
 
-# TODO error handling
 def get_from_image_root(session_id):
     images = []
     if check_image_destination(session_id):
@@ -194,5 +196,7 @@ def get_from_image_root(session_id):
                 images.append(os.path.join(image_path, f))
         else:
             pass
+    else:
+        raise Exception("Image directory does not exist")
 
     return images

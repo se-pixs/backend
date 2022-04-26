@@ -10,7 +10,6 @@ import dynamic_functions as functions
 from inspect import signature
 
 
-# TODO add exception handling
 def assemble_actions(session_id):
     action_logger = settings.ACTION_ASSEMBLER_LOGGER
     try:

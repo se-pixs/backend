@@ -6,8 +6,6 @@ from utils.executionStatus import ExecutionStatus, Status
 from PIL import Image
 
 
-# TODO error handling
-# TODO improve behaviour
 def igPanoSplit(parameters, session_id):
     """
     :param parameters: already parsed and checked parameters
@@ -27,7 +25,12 @@ def igPanoSplit(parameters, session_id):
 
     new_images = []
     for file in images:
-        image = Image.open(file)
+        try:
+            image = Image.open(file)
+        except FileNotFoundError:
+            status.set_status(Status.FAILURE)
+            status.set_message("File not found: " + file)
+            return status
         iteration = 0
         current_width, current_height = image.size
         while iteration < areas:

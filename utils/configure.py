@@ -8,12 +8,11 @@ def configure_server_settings(mode, server_settings):
     Configure server settings.
     Note: To enforce failure on mal-configured settings, we do assignments in a static way
     """
-    # TODO proper logging to file
-    setup_logger = logging.getLogger('server_settings')
+    logging.info('server_settings')
 
     if mode == 'development' or 'dev':
         mode = 'development'
-        setup_logger.info('Configuring server settings for development mode')
+        logging.info('Configuring server settings for development mode')
 
         server_setting = server_settings['development']
         settings.SESSION_EXPIRATION_TIME = server_setting['SESSION_EXPIRATION_TIME']
@@ -45,7 +44,7 @@ def configure_server_settings(mode, server_settings):
         settings.ACTION_ASSEMBLER_LOGGING_PATH = os.path.join(settings.LOGGING_PATH,
                                                               server_setting['ACTION_ASSEMBLER_LOG_PATH'])
 
-        setup_logger.info('Server settings configured for development mode')
+        logging.info('Server settings configured for development mode')
 
     elif mode == 'production' or 'prod':
         mode = 'production'
@@ -80,23 +79,19 @@ def configure_server_settings(mode, server_settings):
         settings.ACTION_ASSEMBLER_LOGGING_PATH = os.path.join(settings.LOGGING_PATH,
                                                               server_setting['ACTION_ASSEMBLER_LOG_PATH'])
 
-        setup_logger.info('Server settings configured for production mode')
-        setup_logger.info('Configuring action assembler for production mode')
+        logging.info('Server settings configured for production mode')
+        logging.info('Configuring action assembler for production mode')
     else:
-        setup_logger.error('Invalid mode: {}'.format(mode))
+        logging.error('Invalid mode: {}'.format(mode))
         raise ValueError('Invalid mode: {}'.format(mode))
 
     # further configure steps
-    configure_actionAssembler(mode, setup_logger)
+    configure_actionAssembler(mode)
 
 
-def configure_actionAssembler(mode, setup_logger):
-    setup_logger.info('Configuring action assembler')
+def configure_actionAssembler(mode):
+    logging.info('Configuring action assembler')
 
-    # TODO proper logging to file
-    action_assembler_logger = logging.getLogger('actionAssembler')
-
-    action_assembler_logger.info(
+    logging.info(
         'ActionAssembler initialized with mode: {}'.format(mode))
-    settings.ACTION_ASSEMBLER_LOGGER = action_assembler_logger
-    setup_logger.info('Configuring action assembler logger')
+    logging.info('Configuring action assembler logger')

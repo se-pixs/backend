@@ -1,19 +1,21 @@
 import logging
 
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseServerError, FileResponse
-from django.conf import settings
+from django.http import HttpResponseServerError
 from utils.miscellaneous import validate_request_session
 from utils.fileSystem import extract_image_dir
-
-# TODO : Improve logging and error handling
 
 
 def download(request):
     if validate_request_session(request):
         session_id = request.session['session_id']
         if request.method == 'GET':
-            return extract_image_dir(session_id)
+            try:
+                http_response = extract_image_dir(session_id)
+            except Exception as e:
+                http_response = HttpResponseServerError("Error while packing the images")
+            return http_response
+        else:
+            return HttpResponseServerError("Method not allowed for download")
     else:
         logging.warning("No session id found")
         return HttpResponseServerError('Session invalid')
@@ -21,4 +23,4 @@ def download(request):
 
 def preview(request):
     if validate_request_session(request):
-        pass # TODO : Implement
+        pass

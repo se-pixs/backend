@@ -9,7 +9,6 @@ from pyxelate import Pyx
 
 
 def convertToPixelArt(parameters, session_id):
-    # TODO error handling
     """
        :param parameters: already parsed and checked parameters
        :param session_id: already validated session id of the user
@@ -19,12 +18,12 @@ def convertToPixelArt(parameters, session_id):
     status = ExecutionStatus()
 
     # read parameters
-    factor = parameters['downsample_factor']
-    palette = parameters['color_palette']
+    factor = parameters['Downsample']
+    palette = parameters['Colorpalette']
 
     new_images = []
+    pyx = Pyx(factor=factor, palette=palette)
     for file in images:
-        pyx = Pyx(factor=factor, palette=palette)
         img = imread(file)
         pyx.fit(img)
         img_pixel_art = pyx.transform(img)

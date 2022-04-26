@@ -14,7 +14,10 @@ def index(request):
     if validate_request_session(request):
         session_id = request.session['session_id']
         if request.method == 'GET':
-            restore_previous_state(session_id)
+            try:
+                restore_previous_state(session_id)
+            except PermissionError:
+                return HttpResponseServerError("Permission denied pls try again")
             return HttpResponseRedirect('/')
         else:
             return HttpResponseServerError('Method not allowed')
