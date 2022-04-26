@@ -19,16 +19,26 @@ def configure_server_settings(mode, server_settings):
         settings.SESSION_EXPIRATION_TIME = server_setting['SESSION_EXPIRATION_TIME']
         settings.MAX_REVERSE_STACK_SIZE = server_setting['MAX_REVERSE_STACK_SIZE']
         settings.CONFIG_PATH = server_setting['CONFIG_PATH']
-        settings.ACTIONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['ACTIONS'])
-        settings.CUSTOM_ACTIONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['CUSTOM_ACTIONS'])
-        settings.BASE_ACTIONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['BASE_ACTIONS'])
-        settings.INIT_ACTIONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['INIT_ACTIONS'])
-        settings.INPUTS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['INPUTS'])
-        settings.POSSIBLE_INPUTS_PATH = os.path.join(settings.INPUTS_PATH, server_setting['POSSIBLE_INPUTS'])
-        settings.IMAGES_ROOT_PATH = os.path.join(settings.CONFIG_PATH, server_setting['IMAGES_ROOT'])
+        settings.ACTIONS_PATH = os.path.join(
+            settings.CONFIG_PATH, server_setting['ACTIONS'])
+        settings.CUSTOM_ACTIONS_PATH = os.path.join(
+            settings.CONFIG_PATH, server_setting['CUSTOM_ACTIONS'])
+        settings.BASE_ACTIONS_PATH = os.path.join(
+            settings.CONFIG_PATH, server_setting['BASE_ACTIONS'])
+        settings.INIT_ACTIONS_PATH = os.path.join(
+            settings.CONFIG_PATH, server_setting['INIT_ACTIONS'])
+        settings.INPUTS_PATH = os.path.join(
+            settings.CONFIG_PATH, server_setting['INPUTS'])
+        settings.POSSIBLE_INPUTS_PATH = os.path.join(
+            settings.INPUTS_PATH, server_setting['POSSIBLE_INPUTS'])
+        settings.IMAGES_ROOT_PATH = os.path.join(
+            settings.CONFIG_PATH, server_setting['IMAGES_ROOT'])
         settings.REVERSE_STACK_PATH = server_setting[
             'REVERSE_STACK_PATH']  # absolute path is different for every session
-        settings.ICONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['ICONS'])
+        settings.TEMP_PATH = server_setting[
+            'TEMP_PATH']  # absolute path is different for every session
+        settings.ICONS_PATH = os.path.join(
+            settings.CONFIG_PATH, server_setting['ICONS'])
 
         # logging constants
         settings.LOGGING_PATH = server_setting['LOGGING_PATH']
@@ -44,16 +54,26 @@ def configure_server_settings(mode, server_settings):
         settings.SESSION_EXPIRATION_TIME = server_setting['SESSION_EXPIRATION_TIME']
         settings.MAX_REVERSE_STACK_SIZE = server_setting['MAX_REVERSE_STACK_SIZE']
         settings.CONFIG_PATH = server_setting['CONFIG_PATH']
-        settings.ACTIONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['ACTIONS'])
-        settings.CUSTOM_ACTIONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['CUSTOM_ACTIONS'])
-        settings.BASE_ACTIONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['BASE_ACTIONS'])
-        settings.INIT_ACTIONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['INIT_ACTIONS'])
-        settings.INPUTS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['INPUTS'])
-        settings.POSSIBLE_INPUTS_PATH = os.path.join(settings.INPUTS_PATH, server_setting['POSSIBLE_INPUTS'])
-        settings.IMAGES_ROOT_PATH = os.path.join(settings.CONFIG_PATH, server_setting['IMAGES_ROOT'])
+        settings.ACTIONS_PATH = os.path.join(
+            settings.CONFIG_PATH, server_setting['ACTIONS'])
+        settings.CUSTOM_ACTIONS_PATH = os.path.join(
+            settings.CONFIG_PATH, server_setting['CUSTOM_ACTIONS'])
+        settings.BASE_ACTIONS_PATH = os.path.join(
+            settings.CONFIG_PATH, server_setting['BASE_ACTIONS'])
+        settings.INIT_ACTIONS_PATH = os.path.join(
+            settings.CONFIG_PATH, server_setting['INIT_ACTIONS'])
+        settings.INPUTS_PATH = os.path.join(
+            settings.CONFIG_PATH, server_setting['INPUTS'])
+        settings.POSSIBLE_INPUTS_PATH = os.path.join(
+            settings.INPUTS_PATH, server_setting['POSSIBLE_INPUTS'])
+        settings.IMAGES_ROOT_PATH = os.path.join(
+            settings.CONFIG_PATH, server_setting['IMAGES_ROOT'])
         settings.REVERSE_STACK_PATH = server_setting[
             'REVERSE_STACK_PATH']  # absolute path is different for every session
-        settings.ICONS_PATH = os.path.join(settings.CONFIG_PATH, server_setting['ICONS'])
+        settings.TEMP_PATH = server_setting[
+            'TEMP_PATH']  # absolute path is different for every session
+        settings.ICONS_PATH = os.path.join(
+            settings.CONFIG_PATH, server_setting['ICONS'])
 
         # logging constants
         settings.LOGGING_PATH = server_setting['LOGGING_PATH']
@@ -76,6 +96,7 @@ def configure_actionAssembler(mode, setup_logger):
     # TODO proper logging to file
     action_assembler_logger = logging.getLogger('actionAssembler')
 
-    action_assembler_logger.info('ActionAssembler initialized with mode: {}'.format(mode))
+    action_assembler_logger.info(
+        'ActionAssembler initialized with mode: {}'.format(mode))
     settings.ACTION_ASSEMBLER_LOGGER = action_assembler_logger
     setup_logger.info('Configuring action assembler logger')

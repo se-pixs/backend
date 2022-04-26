@@ -1,0 +1,32 @@
+{
+  "name": "convertToPixelArt",
+  "displayName": "Convert to pixel art",
+  "description": "changes the image to a pixel art version",
+  "helpMessage": "",
+  "icon": "testIcon.svg",
+  "path": "/execute/convertToPixelArt",
+  "parameters": {
+    "sliders": [
+      {
+        "name": "downsample_factor",
+        "description": "The scale factor for the image",
+        "value": {
+          "min": 2,
+          "max": 30,
+          "step": 1,
+          "default": 5
+        }
+      },
+      {
+        "name": "color_palette",
+        "description": "The amount of colors to use",
+        "value": {
+          "min": 1,
+          "max": 128,
+          "step": 1,
+          "default": 8
+        }
+      }
+    ]
+  }
+}

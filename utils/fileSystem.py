@@ -14,29 +14,49 @@ def create_image_dir(session_id):
         if not os.path.exists(os.path.join(settings.IMAGES_ROOT, session_id)):
             os.makedirs(os.path.join(settings.IMAGES_ROOT, session_id))
     except OSError:
-        print("Error creating image directory with path: " + os.path.join(settings.IMAGES_ROOT, session_id))
+        print("Error creating image directory with path: " +
+              os.path.join(settings.IMAGES_ROOT, session_id))
+
+
+def create_temp_dir(session_id):
+    """
+    Create temporary directory for session id
+    :param session_id: session id
+    :return: path to temporary directory
+    """
+    try:
+        temp_path = os.path.join(settings.TEMP_PATH, session_id)
+        if not os.path.exists(temp_path):
+            os.makedirs(temp_path)
+        return os.path.join(temp_path)
+    except OSError:
+        print("Error creating temp directory with path: " + temp_path)
 
 
 def create_image_reverse_dir(session_id):
     try:
-        reverse_folder_path = os.path.join(settings.IMAGES_ROOT, session_id, settings.REVERSE_STACK_PATH)
+        reverse_folder_path = os.path.join(
+            settings.IMAGES_ROOT, session_id, settings.REVERSE_STACK_PATH)
         if not os.path.exists(os.path.join(reverse_folder_path)):
             os.makedirs(os.path.join(reverse_folder_path))
             for index in range(settings.MAX_REVERSE_STACK_SIZE):
                 try:
-                    os.makedirs(os.path.join(reverse_folder_path, 'state_' + str(index)))
+                    os.makedirs(os.path.join(
+                        reverse_folder_path, 'state_' + str(index)))
                 except OSError:
                     print("Error creating image reverse directory with path: " + os.path.join(reverse_folder_path,
                                                                                               'state_' + str(index)))
     except OSError:
-        print("Error creating reverse image directory with path: " + os.path.join(reverse_folder_path))
+        print("Error creating reverse image directory with path: " +
+              os.path.join(reverse_folder_path))
 
 
 def orderly_clear_images(session_id):
     """
     Clear images from current state to reverse dir
     """
-    reverse_folder_path = os.path.join(settings.IMAGES_ROOT, session_id, settings.REVERSE_STACK_PATH)
+    reverse_folder_path = os.path.join(
+        settings.IMAGES_ROOT, session_id, settings.REVERSE_STACK_PATH)
     if os.path.exists(reverse_folder_path):
         dirs = [name for name in os.listdir(reverse_folder_path) if
                 os.path.isdir(os.path.join(reverse_folder_path, name))]
@@ -52,7 +72,8 @@ def orderly_clear_images(session_id):
     image_root_path = os.path.join(settings.IMAGES_ROOT, session_id)
     for f in os.listdir(os.path.join(image_root_path)):
         if os.path.isfile(os.path.join(image_root_path, f)):
-            shutil.move(os.path.join(image_root_path, f), os.path.join(reverse_folder_path, "state_0", f))
+            shutil.move(os.path.join(image_root_path, f),
+                        os.path.join(reverse_folder_path, "state_0", f))
 
 
 def save_file(file, name, session_id):
@@ -84,13 +105,15 @@ def save_image(image, image_format, session_id):
 def save_images(images, image_format, session_id):
     orderly_clear_images(session_id)
     for index, image in enumerate(images):
-        save_file(image, 'upload{}.'.format(index + 1) + image_format.lower(), session_id)
+        save_file(image, 'upload{}.'.format(index + 1) +
+                  image_format.lower(), session_id)
 
 
 def save_pillow_images(images, image_format, session_id):
     orderly_clear_images(session_id)
     for index, image in enumerate(images):
-        save_pillow_image(image, 'upload{}.'.format(index + 1) + image_format.lower(), session_id)
+        save_pillow_image(image, 'upload{}.'.format(
+        index + 1) + image_format.lower(), session_id)
 
 
 def check_image_destination(session_id):
@@ -145,7 +168,7 @@ def extract_files_to_zip(path, files):
     """
     with ZipFile(os.path.join(path, 'download.zip'), 'w') as zip_file:
         for file in files:
-            zip.write(os.path.join(path, file))
+            zip_file.write(os.path.join(path, file))
 
         return zip_file
 
