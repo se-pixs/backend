@@ -7,7 +7,6 @@ from PIL import Image
 
 
 def changeFormat(parameters, session_id):
-    # TODO error handling
     """
     :param parameters: already parsed and checked parameters
     :param session_id: already validated session id of the user
@@ -23,7 +22,12 @@ def changeFormat(parameters, session_id):
 
     new_images = []
     for file in images:
-        image = Image.open(file)
+        try:
+            image = Image.open(file)
+        except OSError:
+            status.set_message(f"Could not read image {file}")
+            status.set_status(Status.FAILURE)
+            return status
 
         if convert_format == 'JPEG':
             image = image.convert("RGBA")

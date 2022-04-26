@@ -7,7 +7,6 @@ from PIL import Image
 
 
 def resizeImage(parameters, session_id):
-    # TODO error handling
     """
     :param parameters: already parsed and checked parameters
     :param session_id: already validated session id of the user

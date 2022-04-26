@@ -10,7 +10,6 @@ import numpy as np
 
 
 def convertToLowPoly(parameters, session_id):
-    # TODO error handling
     """
        :param parameters: already parsed and checked parameters
        :param session_id: already validated session id of the user
@@ -23,9 +22,9 @@ def convertToLowPoly(parameters, session_id):
     polygons = parameters['polygons']
 
     new_images = []
+    t = triangler.Triangler(
+        sample_method=triangler.SampleMethod.THRESHOLD, points=polygons)
     for file in images:
-        t = triangler.Triangler(
-            sample_method=triangler.SampleMethod.THRESHOLD, points=polygons)
         img = imread(file)
         img_tri = t.convert(img)
         new_images.append(img_tri)

@@ -30,6 +30,7 @@ def validate_request_session(request):
     else:
         return False
 
+
 def generate_session_id():
     # make uuid serializable because django bug
     return uuid4().hex

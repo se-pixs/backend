@@ -34,7 +34,11 @@ def execute(request, action_name):
 
             parsed_parameters = parseParameters(parameters, session_id=session_id)
             action_script_method = getattr(actions, action_name)
-            action_result = action_script_method(parameters=parsed_parameters, session_id=session_id)
+
+            try:
+                action_result = action_script_method(parameters=parsed_parameters, session_id=session_id)
+            except Exception as e:
+                return HttpResponseServerError("Error executing action: " + action_name)
 
             execution_status = action_result.get_status()
             if execution_status == Status.SUCCESS:

@@ -32,8 +32,7 @@ MEDIA_URL = '/media/'
 # custom variables set by config
 CONFIG_FILE_PATH = os.path.join('configurations', 'server-config.json')
 
-# Application classes
-ACTION_ASSEMBLER_LOGGER = None
+SESSION_ID_USAGE = {}
 
 # Application definition
 
