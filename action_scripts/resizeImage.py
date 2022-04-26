@@ -15,11 +15,11 @@ def resizeImage(parameters, session_id):
     images = get_from_image_root(session_id)
 
     # read parameters
-    dimensions = parameters['cutout']
-    width = dimensions['width']['value']
-    height = dimensions['height']['value']
-    point_x = dimensions['positionX']['value']
-    point_y = dimensions['positionY']['value']
+    cutout = parameters['cutout']
+    width = cutout['width']
+    height = cutout['height']
+    point_x = cutout['positionX']
+    point_y = cutout['positionY']
     for file in images:
         image_format = file.split('.')[-1]
         image = Image.open(file)
