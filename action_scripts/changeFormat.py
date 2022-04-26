@@ -1,5 +1,6 @@
 # default imports for loading and saving images
 from utils.fileSystem import get_from_image_root, save_pillow_images
+from utils.executionStatus import ExecutionStatus, Status
 
 # action specific imports
 from PIL import Image
@@ -12,6 +13,7 @@ def changeFormat(parameters, session_id):
     :param session_id: already validated session id of the user
     """
     images = get_from_image_root(session_id)
+    status = ExecutionStatus()
 
     # read parameters
     convert_format = parameters['format']
@@ -34,4 +36,6 @@ def changeFormat(parameters, session_id):
             new_images.append(image.convert("RGBA"))
 
     save_pillow_images(new_images, convert_format, session_id)
-    return 0
+
+    status.set_status(Status.SUCCESS)
+    return status
