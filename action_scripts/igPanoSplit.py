@@ -18,23 +18,30 @@ def igPanoSplit(parameters, session_id):
     status = ExecutionStatus()
 
     # read parameters
-    max_width = parameters['max_width']
-    max_height = parameters['max_height']
+    images_parameter = parameters['images']
+    start_pos_x = images_parameter["positionX"]
+    start_pos_y = images_parameter['positionY']
+    width = images_parameter['width']
+    height = images_parameter['height']
+    areas = images_parameter['areas']
 
     new_images = []
     for file in images:
         image = Image.open(file)
-        width, height = image.size
-        if height > max_height:
-            # crop image to max_height
-            image = image.crop((0, int(height / 2 - (max_height / 2)), width, int(height / 2 + (max_height / 2))))
-            new_images.append(image)
-        if width > max_width:
-            # crop image to max_width
-            amount_of_splits = int(width / max_width)
-            for i in range(amount_of_splits):
-                temp_image = image.crop((int(i * max_width), 0, int((i + 1) * max_width), height))
-                new_images.append(temp_image)
+        iteration = 0
+        current_width, current_height = image.size
+        while iteration < areas:
+            used_width = start_pos_x + (width * (iteration + 1))
+            if current_width < used_width:
+                width = current_width - (used_width - width)
+                # set iteration beyond the last area
+                iteration = areas
+
+            current_start_pos_x = start_pos_x + (width * iteration)
+            new_image = image.crop((current_start_pos_x, start_pos_y, current_start_pos_x + width, start_pos_y + height))
+            new_images.append(new_image)
+            # increment iteration
+            iteration += 1
 
     save_pillow_images(new_images, image_format, session_id)
 

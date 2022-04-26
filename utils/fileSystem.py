@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.http import HttpResponse, FileResponse, HttpResponseNotFound, HttpResponseServerError
-from zipfile import ZipFile
+from zipfile import ZipFile, is_zipfile
 import os
 import mimetypes
 import shutil
@@ -112,8 +112,7 @@ def save_images(images, image_format, session_id):
 def save_pillow_images(images, image_format, session_id):
     orderly_clear_images(session_id)
     for index, image in enumerate(images):
-        save_pillow_image(image, 'upload{}.'.format(
-        index + 1) + image_format.lower(), session_id)
+        save_pillow_image(image, 'upload{}.'.format(index + 1) + image_format.lower(), session_id)
 
 
 def check_image_destination(session_id):
@@ -151,7 +150,7 @@ def extract_image_dir(session_id):
         if file_count > 0:
             if file_count > 1:
                 # return as zip
-                return FileResponse(extract_files_to_zip(image_path, files))
+                return FileResponse(extract_files_to_zip(image_path, files), content_type='application/zip')
             else:
                 # return as image
                 image_path = os.path.join(image_path, files[0])
@@ -168,9 +167,10 @@ def extract_files_to_zip(path, files):
     """
     with ZipFile(os.path.join(path, 'download.zip'), 'w') as zip_file:
         for file in files:
-            zip_file.write(os.path.join(path, file))
+            if not file == 'download.zip':
+                zip_file.write(os.path.join(path, file), arcname=file)
 
-        return zip_file
+    return open(os.path.join(path, 'download.zip'), 'rb')
 
 
 def read_image_to_http_response(image_path):
