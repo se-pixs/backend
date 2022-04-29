@@ -20,16 +20,19 @@ def resizeImage(parameters, session_id):
     height = cutout['height']
     point_x = cutout['positionX']
     point_y = cutout['positionY']
+    new_images = []
     for file in images:
         image_format = file.split('.')[-1]
         image = Image.open(file)
 
         try:
-            image = image.crop((point_x, point_y, point_x + width, point_y + height))
+            image = image.crop(
+                (point_x, point_y, point_x + width, point_y + height))
+            new_images.append(image)
         except Exception as e:
             status.set_status("Error: Image could not be resized")
             return status
 
-    save_pillow_images([image], image_format, session_id)
+    save_pillow_images(new_images, image_format, session_id)
     status.set_status(Status.SUCCESS)
     return status
