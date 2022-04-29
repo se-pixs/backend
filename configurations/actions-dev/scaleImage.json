@@ -1,0 +1,21 @@
+{
+  "name": "scaleImage",
+  "displayName": "Scale Image",
+  "description": "Scales an image to a given scale. ",
+  "helpMessage": "",
+  "icon": "testIcon.svg",
+  "path": "/execute/scaleImage",
+  "parameters": {
+    "valuefields": [
+      {
+        "name": "width",
+        "description": "The width of the image to scale to",
+        "value": {
+          "type": "integer",
+          "range": [1, 4096],
+          "default": 500
+        }
+      }
+    ]
+  }
+}
