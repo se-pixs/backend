@@ -16,6 +16,7 @@ def scaleImage(parameters, session_id):
 
     # read parameters
     width = parameters['width']
+    new_images = []
     for file in images:
         image_format = file.split('.')[-1]
         image = Image.open(file)
@@ -25,9 +26,10 @@ def scaleImage(parameters, session_id):
         new_height = int(im_height * (new_width / im_width))
         try:
             image = image.resize((new_width, new_height), Image.ANTIALIAS)
+            new_images.append(image)
         except Exception as e:
             status.set_status("Error: Image could not be scaled")
             return status
-        save_pillow_images([image], image_format, session_id)
+    save_pillow_images(new_images, image_format, session_id)
     status.set_status(Status.SUCCESS)
     return status
