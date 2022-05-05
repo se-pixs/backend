@@ -4,9 +4,6 @@ from os import path
 from utils.fileSystem import create_temp_dir, get_from_image_root, save_pillow_images
 from utils.executionStatus import ExecutionStatus, Status
 
-# action specific imports
-import numpy as np
-
 
 def compressImage(parameters, session_id):
     """
