@@ -25,7 +25,8 @@ def create_temp_dir(session_id):
     :return: path to temporary directory
     """
     try:
-        temp_path = os.path.join(settings.TEMP_PATH, session_id)
+        temp_path = os.path.join(settings.IMAGES_ROOT,
+                                 settings.TEMP_PATH, session_id)
         if not os.path.exists(temp_path):
             os.makedirs(temp_path)
         return os.path.join(temp_path)
@@ -112,7 +113,8 @@ def save_images(images, image_format, session_id):
 def save_pillow_images(images, image_format, session_id):
     orderly_clear_images(session_id)
     for index, image in enumerate(images):
-        save_pillow_image(image, 'upload{}.'.format(index + 1) + image_format.lower(), session_id)
+        save_pillow_image(image, 'upload{}.'.format(
+            index + 1) + image_format.lower(), session_id)
 
 
 def check_image_destination(session_id):

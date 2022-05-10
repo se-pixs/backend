@@ -1,0 +1,21 @@
+{
+  "name": "compressImage",
+  "description": "Compress an image",
+  "helpMessage": "Compresses an image using the given compression level",
+  "icon": "testIcon.svg",
+  "path": "/execute/compressImage",
+  "parameters": {
+    "sliders": [
+      {
+        "name": "compressionRate",
+        "description": "The compression level",
+        "value": {
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "default": 50
+        }
+      }
+    ]
+  }
+}
