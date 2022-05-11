@@ -1,6 +1,6 @@
 {
   "name": "igPanoSplit",
-  "displayName": "Instagram Pano Split",
+  "displayName": "IG pano split",
   "description": "Creates a swiping panorama from a set of images i.o. to upload them to Instagram.",
   "helpMessage": "",
   "icon": "panoSplitIcon.svg",

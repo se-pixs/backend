@@ -1,6 +1,6 @@
 {
   "name": "compressImage",
-  "description": "Compress an image",
+  "description": "Compress image",
   "helpMessage": "Compresses an image using the given compression level",
   "icon": "testIcon.svg",
   "path": "/execute/compressImage",
