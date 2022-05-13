@@ -38,6 +38,7 @@ def configure_server_settings(mode, server_settings):
             'TEMP_PATH']  # absolute path is different for every session
         settings.ICONS_PATH = os.path.join(
             settings.CONFIG_PATH, server_setting['ICONS'])
+        settings.ALLOWED_ORIGIN = server_setting['ALLOWED_ORIGIN']
 
         # logging constants
         settings.LOGGING_PATH = server_setting['LOGGING_PATH']
@@ -73,6 +74,7 @@ def configure_server_settings(mode, server_settings):
             'TEMP_PATH']  # absolute path is different for every session
         settings.ICONS_PATH = os.path.join(
             settings.CONFIG_PATH, server_setting['ICONS'])
+        settings.ALLOWED_ORIGIN = server_setting['ALLOWED_ORIGIN']
 
         # logging constants
         settings.LOGGING_PATH = server_setting['LOGGING_PATH']
