@@ -1,6 +1,6 @@
 {
   "name": "changeFormat",
-  "displayName": "Change Format",
+  "displayName": "Change format",
   "description": "changes the format of the image to the provided format",
   "helpMessage": "",
   "icon": "changeFormatIcon.svg",
@@ -12,7 +12,10 @@
         "description": "the format to change the image to",
         "value": {
           "type": "dropdown",
-          "range": ["JPEG", "PNG"],
+          "range": [
+            "JPEG",
+            "PNG"
+          ],
           "default": "JPEG"
         }
       }

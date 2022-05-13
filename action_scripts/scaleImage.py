@@ -6,7 +6,7 @@ from utils.executionStatus import ExecutionStatus, Status
 from PIL import Image
 
 
-def resizeImage(parameters, session_id):
+def scaleImage(parameters, session_id):
     """
     :param parameters: already parsed and checked parameters
     :param session_id: already validated session id of the user
@@ -15,24 +15,21 @@ def resizeImage(parameters, session_id):
     status = ExecutionStatus()
 
     # read parameters
-    cutout = parameters['cutout']
-    width = cutout['width']
-    height = cutout['height']
-    point_x = cutout['positionX']
-    point_y = cutout['positionY']
+    width = parameters['width']
     new_images = []
     for file in images:
         image_format = file.split('.')[-1]
         image = Image.open(file)
-
+        im_width, im_height = image.size
+        # maintain aspect ratio
+        new_width = width
+        new_height = int(im_height * (new_width / im_width))
         try:
-            image = image.crop(
-                (point_x, point_y, point_x + width, point_y + height))
+            image = image.resize((new_width, new_height), Image.ANTIALIAS)
             new_images.append(image)
         except Exception as e:
-            status.set_status("Error: Image could not be resized")
+            status.set_status("Error: Image could not be scaled")
             return status
-
     save_pillow_images(new_images, image_format, session_id)
     status.set_status(Status.SUCCESS)
     return status

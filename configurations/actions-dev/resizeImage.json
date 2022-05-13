@@ -1,6 +1,6 @@
 {
   "name": "resizeImage",
-  "displayName": "Resize Image",
+  "displayName": "Resize image",
   "description": "Resizes an image to a specified width and height.",
   "helpMessage": "",
   "icon": "resizeImageIcon.svg",
