@@ -16,8 +16,8 @@
         "sliderValue": {
             "description": "The value of the slider",
             "type": "integer",
-            "minimum": 0,
-            "maximum": 100
+            "minimum": 500,
+            "maximum": 50000
         }
     },
     "required": [

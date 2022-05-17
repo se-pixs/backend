@@ -11,10 +11,10 @@
         "name": "polygons",
         "description": "the amount of polygons used in the low poly version",
         "value": {
-          "min": 10,
-          "max": 100,
-          "step": 1,
-          "default": 50
+          "min": 500,
+          "max": 50000,
+          "step": 500,
+          "default": 500
         }
       }
     ]

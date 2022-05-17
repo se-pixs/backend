@@ -1,15 +1,22 @@
 version: "3.9"
+# The IP address of the docker host has to be set in the .env.local file wich is located in the frontend repository.
+# This is only neccessary if the docker host is a remote machine. If provisioned locally, do nothing.
 services:
   frontend:
     image: frontend:latest
     ports:
       - "3000:3000"
-    environment:
-      - BACKEND_API_URL=http://backend:8000
-      - BACKEND_RESOURCES_URL=http://pixs.it.dh-karlsruhe.de:8000
+# ignore this
+#    environment:
+#      - BACKEND_INTERNAL_ADDRESS=
+    container_name: pixs-frontend
+    hostname: pixs-frontend
   backend:
     image: backend:latest
     ports:
       - "8000:8000"
     environment:
-      - ALLOWED_HOSTS=backend,localhost,pixs.it.dh-karlsruhe.de
+#   add the FQDN or the IP address of the docker host
+      - ALLOWED_HOSTS=localhost,pixs-frontend,pixs-backend,10.9.9.5,pixs-backend.fickbold.de,pixs.fickbold.de,pixs.fickbold.de:8000,https://pixs.fickbold.de:8000,https://pixs.fickbold.de
+    container_name: pixs-backend
+    hostname: pixs-backend
