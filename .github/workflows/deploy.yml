@@ -5,19 +5,18 @@ jobs:
   dispatch:
     runs-on: ubuntu-latest
     steps:
-#      - run: |
-#          curl -u "${{ secrets.PAT_USERNAME}}:${{secrets.PAT_TOKEN}}" \
-#          -H "Accept: application/vnd.github.everest-preview+json" \
-#          -H "Content-Type: application/json" \
-#          https://api.github.com/repos/docker-sstc/docker-notify/actions/workflows/main.yml/dispatches \
-#          --data '{"ref": "dev"}'
-    - uses: actions/github-script@v6
-      with:
-        github-token: ${{ secrets.PAT_TOKEN }}
-        script: |
-          await github.rest.actions.createWorkflowDispatch({
-            owner: 'der2beers',
-            repo: 'backend',
-            workflow_id: 'deploy.yml',
-            ref: 'dev'
-          })
+      - run: |
+          curl -u "${{ secrets.PAT_USERNAME}}:${{secrets.PAT_TOKEN}}" \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Content-Type: application/json" \
+          https://api.github.com/repos/docker-sstc/docker-notify/actions/workflows/main.yml/dispatches \
+          --data '{"ref": "dev"}'
+      - uses: actions/github-script@v6
+        with:
+            github-token: ${{ secrets.PAT_TOKEN }}
+            script: |
+              await github.rest.actions.createWorkflowDispatch({
+                owner: 'der2beers',
+                repo: 'backend',
+                workflow_id: 'deploy.yml',
+                ref: 'dev'})
