@@ -13,5 +13,5 @@ jobs:
             'se-pixs',
             'frontend',
             'workflows/deploy.yaml',
-            'dev',
+            'dev'
           });
