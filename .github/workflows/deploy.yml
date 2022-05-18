@@ -1,10 +1,16 @@
-    - name: Deploy Stage
+
+name: Deploy Pixs frontend & backend containerizedt
+on: [push]
+jobs:   
+  Deploy-pixs-on-docker-host:
+    runs-on: ubuntu:latest
+    - name: Trigger workflow
       uses: actions/github-script@v5
       with:
         script: |
           await github.rest.actions.createWorkflowDispatch({
-            'Mause',
-            'fdroidrepo',
-            'workflows/update.yaml',
-            'main',
+            'se-pixs',
+            'frontend',
+            'workflows/deploy.yaml',
+            'dev',
           });
