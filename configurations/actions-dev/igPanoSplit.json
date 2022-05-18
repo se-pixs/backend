@@ -1,6 +1,6 @@
 {
   "name": "igPanoSplit",
-  "displayName": "Instagram Pano Split",
+  "displayName": "IG Split",
   "description": "Creates a swiping panorama from a set of images i.o. to upload them to Instagram.",
   "helpMessage": "",
   "icon": "testIcon.svg",
@@ -12,7 +12,10 @@
         "description": "the maximum width of single pictures",
         "value": {
           "type": "integer",
-          "range": [1, "$dynamic:add:maxImageHeight:integer:$200$"],
+          "range": [
+            1,
+            "$dynamic:add:maxImageHeight:integer:$200$"
+          ],
           "default": "$dynamic:maxImageWidth"
         }
       },
@@ -21,7 +24,10 @@
         "description": "the maximum height of single pictures",
         "value": {
           "type": "integer",
-          "range": [1, 2160],
+          "range": [
+            1,
+            2160
+          ],
           "default": 1080
         }
       }
