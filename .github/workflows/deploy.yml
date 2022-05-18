@@ -1,38 +1,23 @@
 
-name: Deploy Pixs frontend & backend containerizedt
-on: [push]
-jobs:   
-  Deploy-pixs-on-docker-host:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Trigger workflow
-      uses: actions/github-script@v5
-      with:
-        script: |
-          await github.rest.actions.createWorkflowDispatch({
-            'se-pixs',
-            'frontend',
-            'workflows/deploy.yaml',
-            'dev'
-          });
+name: Deploy Pixs frontend & backend containerized
 on: [push]
 jobs:
   dispatch:
     runs-on: ubuntu-latest
     steps:
-    # - run: |
-    #     curl -u "${{ secrets.PAT_USERNAME}}:${{secrets.PAT_TOKEN}}" \
-    #       -H "Accept: application/vnd.github.everest-preview+json" \
-    #       -H "Content-Type: application/json" \
-    #       https://api.github.com/repos/docker-sstc/docker-notify/actions/workflows/main.yml/dispatches \
-    #       --data '{"ref": "master"}'
+#      - run: |
+#          curl -u "${{ secrets.PAT_USERNAME}}:${{secrets.PAT_TOKEN}}" \
+#          -H "Accept: application/vnd.github.everest-preview+json" \
+#          -H "Content-Type: application/json" \
+#          https://api.github.com/repos/docker-sstc/docker-notify/actions/workflows/main.yml/dispatches \
+#          --data '{"ref": "dev"}'
     - uses: actions/github-script@v6
       with:
         github-token: ${{ secrets.PAT_TOKEN }}
         script: |
           await github.rest.actions.createWorkflowDispatch({
-            owner: 'docker-sstc',
-            repo: 'docker-notify',
-            workflow_id: 'main.yml',
-            ref: 'master'
+            owner: 'der2beers',
+            repo: 'backend',
+            workflow_id: 'deploy.yml',
+            ref: 'dev'
           })
