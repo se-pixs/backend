@@ -3,7 +3,7 @@ name: Deploy Pixs frontend & backend containerizedt
 on: [push]
 jobs:   
   Deploy-pixs-on-docker-host:
-    runs-on: ubuntu:latest
+    runs-on: ubuntu-latest
     steps:
     - name: Trigger workflow
       uses: actions/github-script@v5
