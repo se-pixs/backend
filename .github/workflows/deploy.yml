@@ -10,7 +10,7 @@ jobs:
           -H "Accept: application/vnd.github.everest-preview+json" \
           -H "Content-Type: application/json" \
           https://api.github.com/repos/docker-sstc/docker-notify/actions/workflows/main.yml/dispatches \
-          --data '{"ref": "dev"}'
+          --data '{"ref": "deploy"}'
       - uses: actions/github-script@v6
         with:
             github-token: ${{ secrets.PAT_TOKEN }}
@@ -19,4 +19,4 @@ jobs:
                 owner: 'der2beers',
                 repo: 'backend',
                 workflow_id: 'deploy.yml',
-                ref: 'dev'})
+                ref: 'deploy'})
