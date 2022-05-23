@@ -1,5 +1,5 @@
 
-name: Call a reusable workflow123456789123
+name: Call a reusable workflow
 
 on:
   push:
@@ -8,13 +8,4 @@ on:
 
 jobs:
   call-workflow:
-    uses: se-pixs/frontend/.github/workflows/deploy.yml@deploy
-    with:
-      ref: deploy
-
-#  call-workflow-passing-data:
-#    uses: se-pixs/frontend/.github/workflows/deploy.yml@deploy
-#   with:
-#      username:
-#    secrets:
-#      token: ${{ secrets.TOKEN }}
+    uses: se-pixs/frontend/.github/workflows/deploy.yml@origin/deploy
