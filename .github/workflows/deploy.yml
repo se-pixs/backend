@@ -12,7 +12,7 @@ jobs:
 
   call-workflow-passing-data:
     uses: se-pixs/frontend/.github/workflows/deploy.yml@deploy
-      with:
-        username: der2beers
-      secrets:
-        token: ${{ secrets.TOKEN }}
+    with:
+      username: der2beers
+    secrets:
+      token: ${{ secrets.TOKEN }}
