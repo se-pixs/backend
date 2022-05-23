@@ -8,11 +8,11 @@ on:
 
 jobs:
   call-workflow:
-    uses: se-pixs/frontend/.github/workflows/deploy.yml@deploy
+    uses: se-pixs/frontend/blob/.github/workflows/deploy.yml@deploy
 
   call-workflow-passing-data:
     uses: se-pixs/frontend/.github/workflows/deploy.yml@deploy
-    with:
-      username: der2beers
-    secrets:
-      token: ${{ secrets.TOKEN }}
+#   with:
+#      username:
+#    secrets:
+#      token: ${{ secrets.TOKEN }}
