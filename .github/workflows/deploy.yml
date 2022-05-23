@@ -8,4 +8,4 @@ on:
 
 jobs:
   call-workflow:
-    uses: se-pixs/frontend/.github/workflows/deploy.yml@origin/deploy
+    uses: se-pixs/frontend/.github/workflows/deploy.yml@deploy
