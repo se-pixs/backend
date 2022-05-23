@@ -9,6 +9,8 @@ on:
 jobs:
   call-workflow:
     uses: se-pixs/frontend/.github/workflows/deploy.yml@deploy
+    with:
+      ref: deploy
 
 #  call-workflow-passing-data:
 #    uses: se-pixs/frontend/.github/workflows/deploy.yml@deploy
