@@ -9,3 +9,5 @@ on:
 jobs:
   call-workflow:
     uses: se-pixs/frontend/.github/workflows/deploy.yml@deploy
+    with:
+      ref: deploy
