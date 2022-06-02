@@ -11,12 +11,12 @@ The Webapplication PixS is then
 
 - Clone the pixs/backend & pixs/frontend repositories
 - Adjust settings to your environment
-- - mv pixs.config.template.js pixs.config.js
-- - In pixs/backend edit the Dockerfile
-- - - Set env BACKEND_RESOURCES_URL to 
-       http://<IP of your host/FQDN of your host>:8000
-- - - Add hostname/FQDN to env ALLOWED_HOSTS
-        Don't remove existing entrys
+       - mv pixs.config.template.js pixs.config.js
+       - In pixs/backend edit the Dockerfile
+              -Set env BACKEND_RESOURCES_URL to 
+              http://<IP of your host/FQDN of your host>:8000
+              - Add hostname/FQDN to env ALLOWED_HOSTS
+              Don't remove existing entrys
 - Build the docker image for both repos
     ```shell
     cd /backend
