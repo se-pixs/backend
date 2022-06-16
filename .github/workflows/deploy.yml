@@ -1,0 +1,11 @@
+
+name: Call a reusable workflow123
+
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  call-workflow:
+    uses: se-pixs/frontend/.github/workflows/deploy.yml@dev
