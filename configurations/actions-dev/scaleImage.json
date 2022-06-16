@@ -3,7 +3,7 @@
   "displayName": "Scale image",
   "description": "Scales an image to a given scale. ",
   "helpMessage": "",
-  "icon": "testIcon.svg",
+  "icon": "scaleIcon.svg",
   "path": "/execute/scaleImage",
   "parameters": {
     "valuefields": [

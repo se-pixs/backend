@@ -1,8 +1,9 @@
 {
   "name": "compressImage",
+  "displayName": "Compress image",
   "description": "Compress image",
   "helpMessage": "Compresses an image using the given compression level",
-  "icon": "testIcon.svg",
+  "icon": "compressIcon.svg",
   "path": "/execute/compressImage",
   "parameters": {
     "sliders": [
