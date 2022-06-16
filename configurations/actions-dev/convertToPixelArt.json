@@ -3,12 +3,12 @@
   "displayName": "Pixel art",
   "description": "changes the image to a pixel art version",
   "helpMessage": "",
-  "icon": "testIcon.svg",
+  "icon": "pixelArtIcon.svg",
   "path": "/execute/convertToPixelArt",
   "parameters": {
     "sliders": [
       {
-        "name": "downsample_factor",
+        "name": "Downsample",
         "description": "The scale factor for the image",
         "value": {
           "min": 2,
@@ -18,7 +18,7 @@
         }
       },
       {
-        "name": "color_palette",
+        "name": "Colorpalette",
         "description": "The amount of colors to use",
         "value": {
           "min": 1,

@@ -3,7 +3,7 @@
   "displayName": "Change format",
   "description": "changes the format of the image to the provided format",
   "helpMessage": "",
-  "icon": "testIcon.svg",
+  "icon": "changeFormatIcon.svg",
   "path": "/execute/changeFormat",
   "parameters": {
     "valuefields": [
@@ -34,18 +34,6 @@
           "blue": {
             "default": 255
           }
-        }
-      }
-    ],
-    "sliders": [
-      {
-        "name": "brightness",
-        "description": "the brightness to change the image to",
-        "value": {
-          "min": 0,
-          "max": 100,
-          "step": 1,
-          "default": 25
         }
       }
     ]

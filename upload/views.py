@@ -19,12 +19,12 @@ def index(request):
             if handle_uploaded_file(request.FILES['image'], request.POST.get('format'), session_id):
                 return HttpResponseRedirect('/')
             else:
-                return HttpResponseServerError('Format not supported')  # TODO add error page
+                return HttpResponseServerError('Format not supported')
         else:
             form = UploadFileForm()
             return render(request, 'form.html', {'form': form})
     else:
-        return HttpResponseServerError('Session not valid')  # TODO appropriate error handling
+        return HttpResponseServerError('Session not valid')
 
 
 def handle_uploaded_file(f, format, session_id):

@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.http import HttpResponse, FileResponse, HttpResponseNotFound, HttpResponseServerError
-from zipfile import ZipFile
+from zipfile import ZipFile, is_zipfile
 import os
 import mimetypes
 import shutil
@@ -25,7 +25,8 @@ def create_temp_dir(session_id):
     :return: path to temporary directory
     """
     try:
-        temp_path = os.path.join(settings.TEMP_PATH, session_id)
+        temp_path = os.path.join(settings.IMAGES_ROOT,
+                                 settings.TEMP_PATH, session_id)
         if not os.path.exists(temp_path):
             os.makedirs(temp_path)
         return os.path.join(temp_path)
@@ -113,7 +114,7 @@ def save_pillow_images(images, image_format, session_id):
     orderly_clear_images(session_id)
     for index, image in enumerate(images):
         save_pillow_image(image, 'upload{}.'.format(
-        index + 1) + image_format.lower(), session_id)
+            index + 1) + image_format.lower(), session_id)
 
 
 def check_image_destination(session_id):
@@ -151,7 +152,7 @@ def extract_image_dir(session_id):
         if file_count > 0:
             if file_count > 1:
                 # return as zip
-                return FileResponse(extract_files_to_zip(image_path, files))
+                return FileResponse(extract_files_to_zip(image_path, files), content_type='application/zip')
             else:
                 # return as image
                 image_path = os.path.join(image_path, files[0])
@@ -168,20 +169,23 @@ def extract_files_to_zip(path, files):
     """
     with ZipFile(os.path.join(path, 'download.zip'), 'w') as zip_file:
         for file in files:
-            zip_file.write(os.path.join(path, file))
+            if not file == 'download.zip':
+                zip_file.write(os.path.join(path, file), arcname=file)
 
-        return zip_file
+    return open(os.path.join(path, 'download.zip'), 'rb')
 
 
 def read_image_to_http_response(image_path):
-    with open(image_path, 'rb') as image:
-        content_type, encoding = mimetypes.guess_type(image_path)
-        if content_type is None:
-            content_type = "image/" + image_path.split('.')[-1]
-        return HttpResponse(image.read(), content_type=content_type)
+    image = open(image_path, 'rb')
+    content_type, encoding = mimetypes.guess_type(image_path)
+    if content_type is None:
+        content_type = "image/" + image_path.split('.')[-1]
+
+    response = HttpResponse(image.read(), content_type=content_type)
+    image.close()
+    return response
 
 
-# TODO error handling
 def get_from_image_root(session_id):
     images = []
     if check_image_destination(session_id):
@@ -194,5 +198,7 @@ def get_from_image_root(session_id):
                 images.append(os.path.join(image_path, f))
         else:
             pass
+    else:
+        raise Exception("Image directory does not exist")
 
     return images

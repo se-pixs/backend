@@ -15,7 +15,8 @@
     "TEMP_PATH": "temp",
     "ICONS": "icons",
     "LOGGING_PATH": "logs",
-    "ACTION_ASSEMBLER_LOG_PATH": "actionAssemblerLogs"
+    "ACTION_ASSEMBLER_LOG_PATH": "actionAssemblerLogs",
+    "ALLOWED_ORIGIN": "http://localhost:3000"
   },
   "production": {
     "SESSION_EXPIRATION_TIME": 600,
@@ -32,6 +33,7 @@
     "TEMP_PATH": "temp",
     "ICONS": "icons",
     "LOGGING_PATH": "logs",
-    "ACTION_ASSEMBLER_LOG_PATH": "actionAssemblerLogs"
+    "ACTION_ASSEMBLER_LOG_PATH": "actionAssemblerLogs",
+    "ALLOWED_ORIGIN": "http://localhost:3000"
   }
 }

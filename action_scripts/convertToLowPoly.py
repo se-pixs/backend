@@ -1,5 +1,6 @@
 # default imports for loading and saving images
 from utils.fileSystem import get_from_image_root, save_pillow_images
+from utils.executionStatus import ExecutionStatus, Status
 
 # action specific imports
 import triangler
@@ -9,21 +10,21 @@ import numpy as np
 
 
 def convertToLowPoly(parameters, session_id):
-    # TODO error handling
     """
        :param parameters: already parsed and checked parameters
        :param session_id: already validated session id of the user
     """
     images = get_from_image_root(session_id)
     image_format = images[0].split('.')[-1]
+    status = ExecutionStatus()
 
     # read parameters
     polygons = parameters['polygons']
 
     new_images = []
+    t = triangler.Triangler(
+        sample_method=triangler.SampleMethod.THRESHOLD, points=polygons)
     for file in images:
-        t = triangler.Triangler(
-            sample_method=triangler.SampleMethod.THRESHOLD, points=polygons)
         img = imread(file)
         img_tri = t.convert(img)
         new_images.append(img_tri)
@@ -34,4 +35,5 @@ def convertToLowPoly(parameters, session_id):
     save_pillow_images([Image.fromarray((image * 255).astype(np.uint8)) for image in new_images],
                        image_format, session_id)
 
-    return 0
+    status.set_status(Status.SUCCESS)
+    return status

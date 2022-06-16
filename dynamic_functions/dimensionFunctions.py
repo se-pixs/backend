@@ -21,7 +21,7 @@ def minImageHeight(session_id):
     image_path = build_image_root_by_id(session_id)
     images = get_from_image_root(session_id)
 
-    minHeight = 99999 # TODO set constant for max Image size
+    minHeight = 99999
     for file in images:
         image = Image.open(os.path.join(image_path, file))
         if image.height < minHeight:
@@ -47,7 +47,7 @@ def minImageWidth(session_id):
     image_path = build_image_root_by_id(session_id)
     images = get_from_image_root(session_id)
 
-    minWidth = 99999 # TODO set constant for max Image size
+    minWidth = 99999
     for file in images:
         image = Image.open(os.path.join(image_path, file))
         if image.width < minWidth:

@@ -1,12 +1,11 @@
 # default imports for loading and saving images
 from utils.fileSystem import get_from_image_root, save_pillow_images
+from utils.executionStatus import ExecutionStatus, Status
 
 # action specific imports
 from PIL import Image
 
 
-# TODO error handling
-# TODO improve behaviour
 def igPanoSplit(parameters, session_id):
     """
     :param parameters: already parsed and checked parameters
@@ -14,25 +13,40 @@ def igPanoSplit(parameters, session_id):
     """
     images = get_from_image_root(session_id)
     image_format = images[0].split('.')[-1]
+    status = ExecutionStatus()
 
     # read parameters
-    max_width = parameters['max_width']
-    max_height = parameters['max_height']
+    images_parameter = parameters['images']
+    start_pos_x = images_parameter["positionX"]
+    start_pos_y = images_parameter['positionY']
+    width = images_parameter['width']
+    height = images_parameter['height']
+    areas = images_parameter['areas']
 
     new_images = []
     for file in images:
-        image = Image.open(file)
-        width, height = image.size
-        if height > max_height:
-            # crop image to max_height
-            image = image.crop((0, int(height / 2 - (max_height / 2)), width, int(height / 2 + (max_height / 2))))
-            new_images.append(image)
-        if width > max_width:
-            # crop image to max_width
-            amount_of_splits = int(width / max_width)
-            for i in range(amount_of_splits):
-                temp_image = image.crop((int(i * max_width), 0, int((i + 1) * max_width), height))
-                new_images.append(temp_image)
+        try:
+            image = Image.open(file)
+        except FileNotFoundError:
+            status.set_status(Status.FAILURE)
+            status.set_message("File not found: " + file)
+            return status
+        iteration = 0
+        current_width, current_height = image.size
+        while iteration < areas:
+            used_width = start_pos_x + (width * (iteration + 1))
+            if current_width < used_width:
+                width = current_width - (used_width - width)
+                # set iteration beyond the last area
+                iteration = areas
+
+            current_start_pos_x = start_pos_x + (width * iteration)
+            new_image = image.crop((current_start_pos_x, start_pos_y, current_start_pos_x + width, start_pos_y + height))
+            new_images.append(new_image)
+            # increment iteration
+            iteration += 1
 
     save_pillow_images(new_images, image_format, session_id)
-    return 0
+
+    status.set_status(Status.SUCCESS)
+    return status

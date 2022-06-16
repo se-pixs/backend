@@ -1,0 +1,43 @@
+{
+  "name": "resizeImage",
+  "displayName": "Resize image",
+  "description": "Resizes an image to a specified width and height.",
+  "helpMessage": "",
+  "icon": "resizeImageIcon.svg",
+  "path": "/execute/resizeImage",
+  "parameters": {
+    "selectionfields": [
+      {
+        "name": "cutout",
+        "description": "The dimensions of the image to resize",
+        "value": {
+          "positionX": {
+            "description": "X position of the selection field (upper left corner)",
+            "min": 0,
+            "max": "$dynamic:maxImageWidth",
+            "default": 0
+          },
+          "positionY": {
+            "description": "Y position of the selection field (upper left corner)",
+            "min": 0,
+            "max": "$dynamic:maxImageHeight",
+            "default": 0
+          },
+          "width": {
+            "description": "Width of each area",
+            "min": 1,
+            "max": "$dynamic:maxImageWidth",
+            "default": "$dynamic:maxImageWidth"
+          },
+          "height": {
+            "description": "Height of each area",
+            "min": 1,
+            "max": "$dynamic:maxImageHeight",
+            "default": "$dynamic:maxImageHeight"
+          },
+          "areas": {}
+        }
+      }
+    ]
+  }
+}

@@ -3,7 +3,7 @@
   "displayName": "Low poly",
   "description": "changes the image to a low poly version",
   "helpMessage": "",
-  "icon": "testIcon.svg",
+  "icon": "convertLowPolyIcon.svg",
   "path": "/execute/convertToLowPoly",
   "parameters": {
     "sliders": [
