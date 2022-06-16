@@ -25,9 +25,9 @@ The Webapplication PixS is then
 - Build the docker image for both repos
     ```shell
     cd /backend
-    docker build . -t $PWD:latest
+    docker build . -t backend:latest
     cd ../frontend
-    docker build . -t $PWD:latest
+    docker build . -t frontend:latest
     ```
 
 - 
