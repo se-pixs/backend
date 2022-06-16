@@ -29,9 +29,7 @@ The Webapplication PixS is then
     cd ../frontend
     docker build . -t frontend:latest
     ```
-
-- 
-- provision frontend container (see frontend readme)
+- Provision frontend container (see frontend readme)
 -   ```shell
     docker-compose up -d
     ```
