@@ -16,7 +16,7 @@
     "ICONS": "icons",
     "LOGGING_PATH": "logs",
     "ACTION_ASSEMBLER_LOG_PATH": "actionAssemblerLogs",
-    "ALLOWED_ORIGIN": "http://localhost:3000"
+    "ALLOWED_ORIGIN": "https://pixs.fetox.de"
   },
   "production": {
     "SESSION_EXPIRATION_TIME": 600,
@@ -34,6 +34,6 @@
     "ICONS": "icons",
     "LOGGING_PATH": "logs",
     "ACTION_ASSEMBLER_LOG_PATH": "actionAssemblerLogs",
-    "ALLOWED_ORIGIN": "http://localhost:3000"
+    "ALLOWED_ORIGIN": "https://pixs.fetox.de"
   }
 }
