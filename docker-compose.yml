@@ -17,6 +17,6 @@ services:
       - "8000:8000"
     environment:
 #   add the FQDN or the IP address of the docker host
-      - ALLOWED_HOSTS=localhost,pixs-frontend,pixs-backend,10.9.9.5,pixs-backend.fickbold.de,pixs.fickbold.de,pixs.fickbold.de:8000,https://pixs.fickbold.de:8000,https://pixs.fickbold.de
+      - ALLOWED_HOSTS=localhost,pixs-frontend,pixs-backend,10.9.9.5,pixs.fetox.de,pixs.fetox.de:8000
     container_name: pixs-backend
     hostname: pixs-backend
