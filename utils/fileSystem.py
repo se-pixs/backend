@@ -191,7 +191,7 @@ def get_from_image_root(session_id):
     if check_image_destination(session_id):
         image_path = os.path.join(settings.IMAGES_ROOT, session_id)
         files = [name for name in os.listdir(image_path) if
-                 os.path.isfile(os.path.join(image_path, name))]
+                 os.path.isfile(os.path.join(image_path, name)) and not is_zipfile(os.path.join(image_path, name))]
         file_count = len(files)
         if file_count > 0:
             for f in files:
