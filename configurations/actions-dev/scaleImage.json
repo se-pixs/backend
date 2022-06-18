@@ -12,11 +12,10 @@
         "description": "The width of the image to scale to",
         "value": {
           "type": "integer",
-          "range": [
-            1,
-            4096
-          ],
-          "default": 500
+          "min": 256,
+          "max": 7680,
+          "step": 1,
+          "default": "$dynamic:maxImageWidth"
         }
       }
     ]
