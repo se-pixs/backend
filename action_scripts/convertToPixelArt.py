@@ -6,31 +6,35 @@ from utils.executionStatus import ExecutionStatus, Status
 
 # action specific imports
 from pyxelate import Pyx
+from action_scripts.action import Action
 
 
-def convertToPixelArt(parameters, session_id):
-    """
-       :param parameters: already parsed and checked parameters
-       :param session_id: already validated session id of the user
-    """
-    images = get_from_image_root(session_id)
-    image_format = images[0].split('.')[-1]
-    status = ExecutionStatus()
+class CustomAction(Action):
 
-    # read parameters
-    factor = parameters['Downsample']
-    palette = parameters['Colorpalette']
+    @staticmethod
+    def execute(parameters, session_id):
+        """
+        :param parameters: already parsed and checked parameters
+        :param session_id: already validated session id of the user
+        """
+        images = get_from_image_root(session_id)
+        image_format = images[0].split('.')[-1]
+        status = ExecutionStatus()
 
-    new_images = []
-    pyx = Pyx(factor=factor, palette=palette)
-    for file in images:
-        img = imread(file)
-        pyx.fit(img)
-        img_pixel_art = pyx.transform(img)
-        # convert to PIL image
-        new_images.append(Image.fromarray(img_pixel_art))
+        # read parameters
+        factor = parameters['Downsample']
+        palette = parameters['Colorpalette']
 
-    save_pillow_images(new_images, image_format, session_id)
+        new_images = []
+        pyx = Pyx(factor=factor, palette=palette)
+        for file in images:
+            img = imread(file)
+            pyx.fit(img)
+            img_pixel_art = pyx.transform(img)
+            # convert to PIL image
+            new_images.append(Image.fromarray(img_pixel_art))
 
-    status.set_status(Status.SUCCESS)
-    return status
+        save_pillow_images(new_images, image_format, session_id)
+
+        status.set_status(Status.SUCCESS)
+        return status

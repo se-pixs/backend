@@ -32,11 +32,13 @@ def execute(request, action_name):
                 except json.JSONDecodeError:
                     return HttpResponseServerError("Parameters not valid json")
 
-            parsed_parameters = parseParameters(parameters, session_id=session_id)
-            action_script_method = getattr(actions, action_name)
+            parsed_parameters = parseParameters(
+                parameters, session_id=session_id)
+            action = getattr(actions, action_name).CustomAction
 
             try:
-                action_result = action_script_method(parameters=parsed_parameters, session_id=session_id)
+                action_result = action.execute(
+                    parameters=parsed_parameters, session_id=session_id)
             except Exception as e:
                 return HttpResponseServerError("Error executing action: " + action_name)
 
